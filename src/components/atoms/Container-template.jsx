@@ -1,11 +1,11 @@
 import { Box, useMediaQuery } from "@mui/material";
 import theme from "../../theme";
-// import CssBaseline from "@mui/material/CssBaseline";
-// import { ThemeProvider } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
+import { ThemeProvider } from "@mui/material/styles";
 
-const ContainerTemplate = ({ children, _setTheme, sx,theme }) => {
+const ContainerTemplate = ({ children, _setTheme, sx }) => {
   const isXs = useMediaQuery("(max-width: 600px)");
-  // const setTheme = theme(_setTheme);
+  const setTheme = theme(_setTheme);
   return (
     <>
       <Box
@@ -14,10 +14,10 @@ const ContainerTemplate = ({ children, _setTheme, sx,theme }) => {
         sx={{
           ...sx,
         }}>
-        {/* <ThemeProvider theme={setTheme}>
-          <CssBaseline /> */}
-        {children}
-        {/* </ThemeProvider> */}
+        <ThemeProvider theme={setTheme}>
+          <CssBaseline />
+          {children}
+        </ThemeProvider>
       </Box>
     </>
   );

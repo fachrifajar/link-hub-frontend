@@ -27,3 +27,5 @@ const theme = (mode) =>
   });
 
 export default theme;
+
+// #7e98df

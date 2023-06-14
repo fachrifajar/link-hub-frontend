@@ -1,6 +1,15 @@
-import { Switch, styled, Stack, Typography } from "@mui/material";
-import React, { useState } from "react";
-
+import {
+  Switch,
+  styled,
+  Stack,
+  Typography,
+  // ThemeProvider,
+  // CssBaseline,
+} from "@mui/material";
+import React from "react";
+import theme from "../../theme";
+import { ThemeProvider } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
 const MaterialUISwitch = styled(Switch)(({ theme }) => ({
   width: 62,
   height: 34,
@@ -48,49 +57,50 @@ const MaterialUISwitch = styled(Switch)(({ theme }) => ({
   },
 }));
 
-const NavbarTemplate = ({ initialMode, onThemeChange }) => {
-  const [themeMode, setThemeMode] = useState(initialMode);
-
-  const handleThemeChange = (mode) => {
-    setThemeMode(mode);
-    onThemeChange(mode);
+const NavbarTemplate = ({ _setTheme, getTheme }) => {
+  const setTheme = theme(_setTheme);
+  const [mode, setMode] = React.useState("light");
+  
+  const handleSwitchChange = () => {
+    setMode((prevMode) => (prevMode === "light" ? "dark" : "light"));
+    getTheme(mode);
+    localStorage.setItem("selectedTheme", mode);
   };
 
   return (
     <>
-      <Stack direction="row" justifyContent="space-between">
-        <Stack m={2}>
-          <Typography
-            variant="h6"
-            noWrap
-            component="a"
-            sx={{
-              mr: 2,
-              fontFamily: "monospace",
-              fontWeight: 700,
-              letterSpacing: ".3rem",
-              textDecoration: "none",
-              color: "text.primary",
-              "& span": {
-                color: "white",
-
-                borderRadius: "5px",
-                paddingLeft: "5px",
-                bgcolor: "primary.main",
-              },
-            }}>
-            Link
-            <span>Hub</span>
-          </Typography>
+      <ThemeProvider theme={setTheme}>
+        <CssBaseline />
+        <Stack direction="row" justifyContent="space-between">
+          <Stack m={2}>
+            <Typography
+              variant="h6"
+              noWrap
+              component="a"
+              sx={{
+                mr: 2,
+                fontFamily: "monospace",
+                fontWeight: 700,
+                letterSpacing: ".3rem",
+                textDecoration: "none",
+                color: "text.primary",
+                "& span": {
+                  color: "white",
+                  fontFamily: "monospace",
+                  borderRadius: "5px",
+                  paddingLeft: "5px",
+                  bgcolor: "primary.main",
+                },
+              }}>
+              Link
+              <span>Hub</span>
+            </Typography>
+          </Stack>
+          <Stack m={2}>
+            <MaterialUISwitch onChange={handleSwitchChange} />
+          </Stack>
         </Stack>
-        <Stack m={2}>
-          <MaterialUISwitch
-            onClick={() =>
-              handleThemeChange(themeMode === "light" ? "dark" : "light")
-            }
-          />
-        </Stack>
-      </Stack>
+      </ThemeProvider>
     </>
   );
 };

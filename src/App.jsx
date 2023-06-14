@@ -1,33 +1,32 @@
 import React from "react";
-import NavbarTemplate from "./components/organisms/Navbar-template";
 import {
-  ThemeProvider,
-  CssBaseline,
   Box,
   Typography,
   useMediaQuery,
 } from "@mui/material";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import theme from "./theme";
+import { useNavigate } from "react-router-dom";
 
+import NavbarTemplate from "./components/organisms/Navbar-template";
 import ContainerTemplate from "./components/atoms/Container-template";
 import ButtonTemplate from "./components/atoms/Button-template";
 
 const App = () => {
-  const [themeMode, setThemeMode] = React.useState("light");
+  document.title = "Home";
+  const [mode, setMode] = React.useState(
+    localStorage.getItem("selectedTheme") || "light"
+  );
   const isXs = useMediaQuery("(max-width: 600px)");
-  const isSm = useMediaQuery("(min-width: 601px) and (max-width: 930px)");
+  const navigate = useNavigate();
 
   return (
     <>
-      <ThemeProvider theme={theme(themeMode)}>
-        <CssBaseline />
-        <NavbarTemplate
-          initialMode={themeMode}
-          onThemeChange={(e) => setThemeMode(e)}
-        />
+
+        <NavbarTemplate _setTheme={mode} getTheme={(e) => setMode(e)} />
 
         <ContainerTemplate
+          _setTheme={mode}
           sx={{
             display: "flex",
             justifyContent: "center",
@@ -79,16 +78,25 @@ const App = () => {
               title="Get Started"
               size="large"
               endIcon={<ArrowForwardIcon />}
-              sx={{ bgcolor: "primary.main" }}
+              onClick={() => navigate("/register")}
+              sx={{
+                bgcolor: "primary.main",
+                borderRadius: "10px",
+                // "&:hover": {
+                //   "& .MuiSvgIcon-root": {
+                //     marginLeft: 2,
+                //   },
+                // },
+              }}
             />
           </Box>
-          {themeMode === "light" ? (
+          {mode === "light" ? (
             <img src="/landing6.png" alt="landing-page-img" />
           ) : (
             <img src="/landing8.png" alt="landing-page-img" />
           )}
         </ContainerTemplate>
-      </ThemeProvider>
+
     </>
   );
 };

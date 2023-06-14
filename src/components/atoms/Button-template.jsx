@@ -13,6 +13,7 @@ const ButtonTemplate = ({
   component,
   variant,
   size,
+  startIcon,
 }) => {
   if (isLoading) {
     return (
@@ -45,9 +46,10 @@ const ButtonTemplate = ({
       disabled={disabled}
       onClick={onClick}
       endIcon={endIcon}
+      startIcon={startIcon}
       size={size}
       sx={{
-        borderRadius: "10px",
+        borderRadius: "20px",
         marginTop: "20px",
         // color: "white",
         textTransform: "none",
