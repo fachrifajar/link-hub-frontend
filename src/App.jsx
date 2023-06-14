@@ -7,12 +7,11 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import theme from "./theme";
 
 import ContainerTemplate from "./components/atoms/Container-template";
 import ButtonTemplate from "./components/atoms/Button-template";
-
 
 const App = () => {
   const [themeMode, setThemeMode] = React.useState("light");
@@ -35,10 +34,11 @@ const App = () => {
             alignItems: "center",
             minHeight: "90vh",
             flexDirection: { md: "row", xs: "column-reverse" },
+            "& img": {
+              width: isXs ? "90%" : "inherit",
+            },
           }}>
-          <Box
-            mt={{ xs: 2 }}
-            sx={{ maxWidth: { md: "50vw" } }}>
+          <Box mt={{ xs: 2 }} sx={{ maxWidth: { md: "50vw" } }}>
             <Typography variant="body1" color="text.secondary">
               BOOST YOUR ONLINE PRESENCE
             </Typography>
@@ -83,9 +83,9 @@ const App = () => {
             />
           </Box>
           {themeMode === "light" ? (
-            <img src="/landing6.png" alt="" />
+            <img src="/landing6.png" alt="landing-page-img" />
           ) : (
-            <img src="/landing9.png" alt="" />
+            <img src="/landing8.png" alt="landing-page-img" />
           )}
         </ContainerTemplate>
       </ThemeProvider>

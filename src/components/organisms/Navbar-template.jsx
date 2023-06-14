@@ -1,4 +1,4 @@
-import { Switch, styled, Stack } from "@mui/material";
+import { Switch, styled, Stack, Typography } from "@mui/material";
 import React, { useState } from "react";
 
 const MaterialUISwitch = styled(Switch)(({ theme }) => ({
@@ -58,18 +58,38 @@ const NavbarTemplate = ({ initialMode, onThemeChange }) => {
 
   return (
     <>
-      <Stack
-        alignItems="end"
-        m={1}
-        sx={{
-          // margin: "10px 10px 0 0"
-        }}
-      >
-        <MaterialUISwitch
-          onClick={() =>
-            handleThemeChange(themeMode === "light" ? "dark" : "light")
-          }
-        />
+      <Stack direction="row" justifyContent="space-between">
+        <Stack m={2}>
+          <Typography
+            variant="h6"
+            noWrap
+            component="a"
+            sx={{
+              mr: 2,
+              fontFamily: "monospace",
+              fontWeight: 700,
+              letterSpacing: ".3rem",
+              textDecoration: "none",
+              color: "text.primary",
+              "& span": {
+                color: "white",
+
+                borderRadius: "5px",
+                paddingLeft: "5px",
+                bgcolor: "primary.main",
+              },
+            }}>
+            Link
+            <span>Hub</span>
+          </Typography>
+        </Stack>
+        <Stack m={2}>
+          <MaterialUISwitch
+            onClick={() =>
+              handleThemeChange(themeMode === "light" ? "dark" : "light")
+            }
+          />
+        </Stack>
       </Stack>
     </>
   );
