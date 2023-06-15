@@ -60,7 +60,7 @@ const MaterialUISwitch = styled(Switch)(({ theme }) => ({
 const NavbarTemplate = ({ _setTheme, getTheme }) => {
   const setTheme = theme(_setTheme);
   const [mode, setMode] = React.useState("light");
-  
+
   const handleSwitchChange = () => {
     setMode((prevMode) => (prevMode === "light" ? "dark" : "light"));
     getTheme(mode);

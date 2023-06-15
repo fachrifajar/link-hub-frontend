@@ -2,7 +2,6 @@ import React from "react";
 import {
   Box,
   Typography,
-  useMediaQuery,
   Card,
   Paper,
   Stack,
@@ -12,6 +11,7 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import theme from "../../theme";
+import axios from "axios";
 
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
@@ -23,6 +23,9 @@ import NavbarTemplate from "../../components/organisms/Navbar-template";
 import ContainerTemplate from "../../components/atoms/Container-template";
 import TextFieldTemplate from "../../components/atoms/Textfield-template";
 import ButtonTemplate from "../../components/atoms/Button-template";
+import PaperTemplate from "../../components/atoms/Paper-template";
+import ModalErrorTemplate from "../../components/organisms/Modal-error-template";
+import ModalConfirmationTemplate from "../../components/organisms/Modal-confirmation-template";
 
 import {
   createUserWithEmailAndPassword,
@@ -36,7 +39,8 @@ import { auth } from "../../config/firebase";
 
 const Register = () => {
   document.title = "Register";
-  const isXs = useMediaQuery("(max-width: 600px)");
+  const navigate = useNavigate();
+
   const [mode, setMode] = React.useState(
     localStorage.getItem("selectedTheme") || "light"
   );
@@ -57,6 +61,12 @@ const Register = () => {
     value: "",
     showPwd: false,
   });
+  const [confirmPwd, setConfirmPwd] = React.useState({
+    isErr: false,
+    errMsg: "",
+    value: "",
+  });
+
   const [isLoading, setIsLoading] = React.useState(false);
   const [isDisabled, setIsDisabled] = React.useState(true);
   const [isModalSuccess, setIsModalSuccess] = React.useState(false);
@@ -64,6 +74,7 @@ const Register = () => {
     isErr: false,
     errMsg: "",
   });
+  const [isResendLoading, setIsResendLoading] = React.useState(false);
 
   const handleChangeName = (event) => {
     const newValue = event.target.value;
@@ -156,6 +167,26 @@ const Register = () => {
     }
   };
 
+  const handleChangeConfirmPassword = (event) => {
+    const newValue = event.target.value;
+
+    if (newValue === pwd?.value) {
+      setConfirmPwd((prevValue) => ({
+        ...prevValue,
+        isErr: false,
+        errMsg: "",
+        value: newValue,
+      }));
+    } else if (newValue !== pwd?.value) {
+      setConfirmPwd((prevValue) => ({
+        ...prevValue,
+        isErr: true,
+        errMsg: "Password-Confirmation does'nt match with Password",
+        value: "",
+      }));
+    }
+  };
+
   const handleClickShowPassword = () => {
     setPwd((prevValue) => ({
       ...prevValue,
@@ -167,103 +198,130 @@ const Register = () => {
     event.preventDefault();
   };
 
-  const handleRegister = () => {
-    // const email = email?.value;
-    // const password = pwd?.value;
+  const handleRegister = async () => {
+    try {
+      setIsLoading(true);
+      const response = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/auth/register`,
+        {
+          email: email?.value,
+          username: username?.value,
+          pwd: pwd?.value,
+        }
+      );
+      firebaseAuth();
+    } catch (error) {
+      setIsLoading(false);
+      setIsModalErr((prevValue) => ({
+        ...prevValue,
+        isErr: true,
+        errMsg: error?.response?.data?.message?.message,
+      }));
+      console.log(error);
+    }
+  };
 
-    setIsLoading(true);
+  const firebaseAuth = async () => {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email?.value,
+        pwd?.value
+      );
+      // const user = userCredential.user;
+      // console.log("user,", user);
 
-    createUserWithEmailAndPassword(auth, email?.value, pwd?.value)
-      .then((userCredential) => {
-        // setShowModal(true);
+      setIsLoading(false);
+      setIsModalSuccess(true);
 
-        const user = userCredential.user;
-        console.log("user,", user);
-        updateProfile(auth.currentUser, {
-          displayName: username?.value,
-        }).then(() => {
-          setIsLoading(false);
+      // Send confirmation email
+      try {
+        await sendEmailVerification(auth.currentUser);
+        console.log("Verification email sent successfully");
+      } catch (error) {
+        console.error("Error sending verification email:", error);
+      }
+    } catch (error) {
+      console.log(error);
+      setIsLoading(false);
+    }
+  };
 
-          // useDb.sendData("users", {
-          //   ...usersList,
-          //   [user.uid]: {
-          //     emailVerified: user.emailVerified,
-          //     email: user.email,
-          //     user_id: user.uid,
-          //     profile_picture: "null",
-          //     fullname: user.displayName,
-          //     providerId: "email/pass",
-          //     created_at: user?.auth?.currentUser?.reloadUserInfo?.createdAt,
-          //     password: user?.auth?.currentUser?.reloadUserInfo?.passwordHash,
-          //     is_online: false,
-          //     friend_list: "null",
-          //   },
-          // });
-
-          console.log("auth,", auth);
-          console.log("email,", email?.value);
-          console.log("password,", pwd?.value);
-          setIsLoading(false);
-          // Send confirmation email
-          sendEmailVerification(auth.currentUser)
-            .then(() => {
-              console.log("Verification email sent successfully");
-            })
-            .catch((error) => {
-              console.error("Error sending verification email:", error);
-            });
-        });
+  const handleResend = () => {
+    setIsResendLoading(true);
+    sendEmailVerification(auth.currentUser)
+      .then(() => {
+        setIsResendLoading(false);
       })
       .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        setIsLoading(false);
-
-        // if (errorMessage == "Firebase: Error (auth/invalid-email).") {
-        //   setIsErrorEmail(true);
-        //   setErrorMessageEmail("Please enter a valid email address");
-        // } else if (errorCode == "auth/email-already-in-use") {
-        //   setIsErrorEmail(true);
-        //   setErrorMessageEmail("Email already in use");
-        // } else {
-        //   setIsErrorPass(true);
-        //   setErrorMessagePass("Password should be at least 6 characters ");
-        // }
-
-        console.log("error,", error);
-        console.log("errorCode,", errorCode);
-        console.log("errorMessage,", errorMessage);
+        console.error(error);
+        setIsResendLoading(false);
       });
   };
 
-  const handleRegisterGoogle = () => {
-    const provider = new GoogleAuthProvider();
-    signInWithPopup(auth, provider)
-      .then((result) => {
-        const user = result.user;
-        console.log(user);
-        // useDb.sendData("users", {
-        //   ...usersList,
-        //   [user.uid]: {
-        //     emailVerified: user.emailVerified,
-        //     email: user.email,
-        //     created_at: new Date().getTime(),
-        //     user_id: user.uid,
-        //     profile_picture: user.photoURL,
-        //     fullname: user.displayName,
-        //     is_online: false,
-        //     friend_list: "null",
-        //   },
-        // });
-        // router.push("/auth/login");
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
+  // const handleRegisterGoogle = () => {
+  //   const provider = new GoogleAuthProvider();
+  //   signInWithPopup(auth, provider)
+  //     .then((result) => {
+  //       const user = result.user;
+  //       console.log(user);
+  //       // const response = await axios.post(
+  //       //   `${import.meta.env.VITE_BASE_URL}/auth/register`,
+  //       //   {
+  //       //     email: email?.value,
+  //       //     username: username?.value,
+  //       //     pwd: pwd?.value,
+  //       //   }
+  //       // );
+  //     })
+  //     .catch((error) => {
+  //       const errorCode = error.code;
+  //       const errorMessage = error.message;
 
-        const credential = GoogleAuthProvider.credentialFromError(error);
-      });
+  //       const credential = GoogleAuthProvider.credentialFromError(error);
+  //       console.log(error);
+  //       console.log(errorCode);
+  //       console.log(errorMessage);
+  //       console.log(credential);
+  //     });
+  // };
+
+  const handleRegisterGoogle = async () => {
+    try {
+      const provider = new GoogleAuthProvider();
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+      console.log(user);
+
+      const response = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/auth/register`,
+        {
+          email: user?.email,
+          username: '',
+          pwd: '',
+        }
+      );
+
+      console.log(response)
+    } catch (error) {
+      console.log(error)
+      // const errorCode = error.code;
+      // const errorMessage = error.message;
+      // const credential = GoogleAuthProvider.credentialFromError(error);
+      // console.log(error);
+      // console.log(errorCode);
+      // console.log(errorMessage);
+      // console.log(credential);
+    }
   };
+
+  React.useEffect(() => {
+    if (email?.value && username?.value && pwd?.value && confirmPwd?.value) {
+      setIsDisabled(false);
+    } else {
+      setIsDisabled(true);
+    }
+  }, [email?.value, username?.value, pwd?.value, confirmPwd?.value]);
 
   return (
     <>
@@ -277,46 +335,7 @@ const Register = () => {
           alignItems: "center",
           // minHeight: "90vh",
         }}>
-        <Paper
-          elevation={2}
-          sx={{
-            // width: { md: "25vw", sm: "50vw", xs: "100vw" },
-            width: "400px",
-            height: "auto",
-            padding: { md: "3%", sm: "3%", xs: "10%" },
-            marginTop: "5vh",
-            bgcolor: "background.default",
-            borderRadius: "20px",
-            display: "flex",
-            // alignItems: "center",
-            textAlign: "center",
-            // justifyContent: "center",
-            flexDirection: "column",
-            maxHeight: "100vh",
-            overflow: "auto",
-          }}>
-          <Typography
-            variant="h4"
-            fontWeight="bold"
-            sx={{
-              color: "text.contrastText",
-              textAlign: "flex-start",
-              marginBottom: "5%",
-
-              // mr: 3,
-              // , mr: { md: 15, sm: 10, xs: 10 }
-            }}>
-            {/* <ArrowBackIosNewIcon
-                sx={{
-                  cursor: "pointer",
-                  fontSize: "large",
-                  // mr: 3,
-                  // mr: { md: 15, sm: 10, xs: 10 },
-                }}
-              /> */}
-            Register
-          </Typography>
-
+        <PaperTemplate title="Register" onClick={() => navigate("/login")}>
           <TextFieldTemplate
             variant="standard"
             label="Email"
@@ -365,15 +384,20 @@ const Register = () => {
           <TextFieldTemplate
             variant="standard"
             label="Password Confirmation"
-            placeholder="Enter your Password"
+            placeholder="Enter your Confirmation Password"
             type="password"
+            onChange={handleChangeConfirmPassword}
+            error={confirmPwd?.isErr}
+            helperText={confirmPwd?.errMsg}
+            disabled={pwd?.value ? false : true}
           />
 
           <ButtonTemplate
             title="REGISTER"
             onClick={handleRegister}
             isLoading={isLoading}
-            endIcon={<ArrowForwardIcon />}
+            // endIcon={<ArrowForwardIcon />}
+            disabled={isDisabled}
             sx={{ bgcolor: "primary.main", marginBottom: "5%" }}
           />
 
@@ -386,12 +410,42 @@ const Register = () => {
           <ButtonTemplate
             title="GOOGLE"
             onClick={handleRegisterGoogle}
-            isLoading={isLoading}
+            // isLoading={isLoading}
             startIcon={<GoogleIcon />}
             variant="outlined"
             sx={{ color: "primary.main", marginBottom: "5%" }}
           />
-        </Paper>
+        </PaperTemplate>
+        <ModalErrorTemplate
+          open={isModalErr?.isErr}
+          text={isModalErr?.errMsg}
+          onClose={() =>
+            setIsModalErr((prevValue) => ({
+              ...prevValue,
+              isErr: false,
+            }))
+          }
+        />
+        <ModalConfirmationTemplate open={isModalSuccess}>
+          <Stack
+            // spacing={0}
+            direction="row"
+            justifyContent="space-around"
+            alignItems="center">
+            <ButtonTemplate
+              title="Resend"
+              onClick={handleResend}
+              isLoading={isResendLoading}
+              variant="outlined"
+              sx={{ width: "40%" }}
+            />
+            <ButtonTemplate
+              title="Already received"
+              onClick={() => navigate("/login")}
+              sx={{ width: "40%" }}
+            />
+          </Stack>
+        </ModalConfirmationTemplate>
       </ContainerTemplate>
     </>
   );

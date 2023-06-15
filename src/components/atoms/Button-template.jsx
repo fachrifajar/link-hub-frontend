@@ -18,7 +18,6 @@ const ButtonTemplate = ({
   if (isLoading) {
     return (
       <LoadingButton
-        // fullWidth
         component={component}
         loading={true}
         variant={variant ? variant : "contained"}
@@ -26,7 +25,7 @@ const ButtonTemplate = ({
         onClick={onClick}
         size={size}
         sx={{
-          borderRadius: "10px",
+          borderRadius: "20px",
           marginTop: "20px",
           color: "white",
           textTransform: "none",
@@ -39,7 +38,6 @@ const ButtonTemplate = ({
 
   return (
     <Button
-      //   fullWidth
       color={color}
       component={component}
       variant={variant ? variant : "contained"}
