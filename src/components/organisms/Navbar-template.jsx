@@ -1,11 +1,4 @@
-import {
-  Switch,
-  styled,
-  Stack,
-  Typography,
-  // ThemeProvider,
-  // CssBaseline,
-} from "@mui/material";
+import { Switch, styled, Stack, Typography } from "@mui/material";
 import React from "react";
 import theme from "../../theme";
 import { ThemeProvider } from "@mui/material/styles";

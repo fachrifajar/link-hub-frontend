@@ -17,16 +17,17 @@ const TextFieldTemplate = ({
   onInput,
   name,
   variant,
+  fullWidth
 }) => {
   const isXs = useMediaQuery("(max-width: 600px)");
   return (
     <>
       <TextField
-        //   fullWidth
+        fullWidth={fullWidth}
         name={name}
         onKeyDown={onKeyDown}
         onInput={onInput}
-        size={isXs ? "medium" : "small"}
+        size={isXs ? "small" : "medium"}
         id="outlined-basic"
         margin="normal"
         variant={variant ? variant : "outlined"}
@@ -62,7 +63,7 @@ const TextFieldTemplate = ({
               borderColor: "secondary",
             },
           },
-        //   width: { xs: "20rem", sm: "20rem", md: "25rem" },
+          //   width: { xs: "20rem", sm: "20rem", md: "25rem" },
           ...sx,
         }}
       />

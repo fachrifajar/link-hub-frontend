@@ -14,10 +14,12 @@ const ButtonTemplate = ({
   variant,
   size,
   startIcon,
+  fullWidth,
 }) => {
   if (isLoading) {
     return (
       <LoadingButton
+        fullWidth={fullWidth}
         component={component}
         loading={true}
         variant={variant ? variant : "contained"}
@@ -38,6 +40,7 @@ const ButtonTemplate = ({
 
   return (
     <Button
+      fullWidth={fullWidth}
       color={color}
       component={component}
       variant={variant ? variant : "contained"}

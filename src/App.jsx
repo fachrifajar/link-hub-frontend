@@ -1,7 +1,6 @@
 import React from "react";
 import { Box, Typography, useMediaQuery } from "@mui/material";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import theme from "./theme";
 import { useNavigate } from "react-router-dom";
 
 import NavbarTemplate from "./components/organisms/Navbar-template";

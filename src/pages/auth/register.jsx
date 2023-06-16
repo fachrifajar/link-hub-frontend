@@ -8,7 +8,7 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import theme from "../../theme";
+import { useSelector } from "react-redux";
 import axios from "axios";
 
 import Visibility from "@mui/icons-material/Visibility";
@@ -37,6 +37,10 @@ const Register = () => {
   const isXs = useMediaQuery("(max-width: 600px)");
   const [mode, setMode] = React.useState(
     localStorage.getItem("selectedTheme") || "light"
+  );
+
+  const [authDataRedux, setAuthDataRedux] = React.useState(
+    useSelector((state) => state?.auth?.data?.data)
   );
 
   const [email, setEmail] = React.useState({
@@ -73,7 +77,7 @@ const Register = () => {
 
   const handleChangeName = (event) => {
     const newValue = event.target.value;
-    const strRegex = /^(?!(?:.*\s){3})[A-Za-z][A-Za-z\s\d]{5,25}$/;
+    const strRegex = /^(?!.*[_.]{2})[A-Za-z0-9][A-Za-z0-9_.]{3,18}[A-Za-z0-9]$/;
 
     if (!strRegex.test(newValue)) {
       if (!newValue.length) {
@@ -88,7 +92,7 @@ const Register = () => {
           ...prevValue,
           isErr: true,
           errMsg:
-            "Name must contain only letters & numbers and letters. Start with a letter and be between 5-20 characters long",
+            "Name must start with a letter or number, and can only contain letters, numbers, underscores, and periods. It should be between 5-20 characters long.",
           value: "",
         }));
       }
@@ -290,6 +294,10 @@ const Register = () => {
   };
 
   React.useEffect(() => {
+    if (authDataRedux) {
+      navigate("/");
+    }
+
     if (email?.value && username?.value && pwd?.value && confirmPwd?.value) {
       setIsDisabled(false);
     } else {

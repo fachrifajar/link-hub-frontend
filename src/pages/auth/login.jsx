@@ -43,6 +43,10 @@ const Login = () => {
     localStorage.getItem("selectedTheme") || "light"
   );
 
+  const [authDataRedux, setAuthDataRedux] = React.useState(
+    useSelector((state) => state?.auth?.data?.data)
+  );
+
   const [email, setEmail] = React.useState({
     isErr: false,
     errMsg: "",
@@ -122,6 +126,9 @@ const Login = () => {
         {
           email: email?.value,
           pwd: pwd?.value,
+        },
+        {
+          withCredentials: true,
         }
       );
       // setIsLoading(false);
@@ -165,7 +172,7 @@ const Login = () => {
                 data: authData,
               })
             );
-            setRedirect("/");
+            setRedirect("/admin");
             setIsModalSuccess(true);
           }
         }
@@ -191,6 +198,9 @@ const Login = () => {
         {
           email: user?.email,
           pwd: import.meta.env.VITE_SECRET_PWD,
+        },
+        {
+          withCredentials: true,
         }
       );
 
@@ -218,6 +228,10 @@ const Login = () => {
   };
 
   React.useEffect(() => {
+    if (authDataRedux) {
+      navigate("/admin");
+    }
+
     if (email?.value && pwd?.value) {
       setIsDisabled(false);
     } else {
