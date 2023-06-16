@@ -8,7 +8,6 @@ const MyModal = styled(Modal)({
   alignItems: "center",
   justifyContent: "center",
   marginBottom: "30vh",
-
 });
 
 const MyCard = styled(Card)(({ theme }) => ({
@@ -30,14 +29,19 @@ const ModalErrorTemplate = ({ open, onClose, text, children, sx }) => {
         <MyCard>
           <ReportProblemIcon color="error" sx={{ fontSize: "50px" }} />
           <Typography
-            variant="h5"
+            variant="h4"
             color="text.secondary"
-            sx={{
-              fontSize: { xs: "20px", sm: "24px", md: "24px" },
-              marginTop: "20px",
-            }}>
-            {text}
+            sx={{ marginTop: "2%" }}>
+            {text?.split("\n").map((line, index) => (
+              <span
+                key={index}
+                style={{ fontSize: index === 1 ? "1.2rem" : "inherit" }}>
+                {line}
+                <br />
+              </span>
+            ))}
           </Typography>
+
           {children}
         </MyCard>
       </MyModal>

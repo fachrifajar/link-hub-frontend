@@ -1,20 +1,16 @@
 import React from "react";
 import {
-  Box,
   Typography,
-  Card,
-  Paper,
   Stack,
   InputAdornment,
   IconButton,
   Divider,
+  useMediaQuery,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import theme from "../../theme";
 import axios from "axios";
 
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import GoogleIcon from "@mui/icons-material/Google";
@@ -25,22 +21,20 @@ import TextFieldTemplate from "../../components/atoms/Textfield-template";
 import ButtonTemplate from "../../components/atoms/Button-template";
 import PaperTemplate from "../../components/atoms/Paper-template";
 import ModalErrorTemplate from "../../components/organisms/Modal-error-template";
-import ModalConfirmationTemplate from "../../components/organisms/Modal-confirmation-template";
+import ModalSuccessTemplate from "../../components/organisms/Modal-success-template";
 
 import {
   createUserWithEmailAndPassword,
-  updateProfile,
   sendEmailVerification,
   GoogleAuthProvider,
   signInWithPopup,
-  onAuthStateChanged,
 } from "firebase/auth";
 import { auth } from "../../config/firebase";
 
 const Register = () => {
   document.title = "Register";
   const navigate = useNavigate();
-
+  const isXs = useMediaQuery("(max-width: 600px)");
   const [mode, setMode] = React.useState(
     localStorage.getItem("selectedTheme") || "light"
   );
@@ -68,6 +62,7 @@ const Register = () => {
   });
 
   const [isLoading, setIsLoading] = React.useState(false);
+  const [isLoadingGoogle, setIsLoadingGoogle] = React.useState(false);
   const [isDisabled, setIsDisabled] = React.useState(true);
   const [isModalSuccess, setIsModalSuccess] = React.useState(false);
   const [isModalErr, setIsModalErr] = React.useState({
@@ -259,35 +254,9 @@ const Register = () => {
       });
   };
 
-  // const handleRegisterGoogle = () => {
-  //   const provider = new GoogleAuthProvider();
-  //   signInWithPopup(auth, provider)
-  //     .then((result) => {
-  //       const user = result.user;
-  //       console.log(user);
-  //       // const response = await axios.post(
-  //       //   `${import.meta.env.VITE_BASE_URL}/auth/register`,
-  //       //   {
-  //       //     email: email?.value,
-  //       //     username: username?.value,
-  //       //     pwd: pwd?.value,
-  //       //   }
-  //       // );
-  //     })
-  //     .catch((error) => {
-  //       const errorCode = error.code;
-  //       const errorMessage = error.message;
-
-  //       const credential = GoogleAuthProvider.credentialFromError(error);
-  //       console.log(error);
-  //       console.log(errorCode);
-  //       console.log(errorMessage);
-  //       console.log(credential);
-  //     });
-  // };
-
   const handleRegisterGoogle = async () => {
     try {
+      setIsLoadingGoogle(true);
       const provider = new GoogleAuthProvider();
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
@@ -297,21 +266,26 @@ const Register = () => {
         `${import.meta.env.VITE_BASE_URL}/auth/register`,
         {
           email: user?.email,
-          username: '',
-          pwd: '',
+          username: "",
+          pwd: "",
         }
       );
 
-      console.log(response)
+      console.log(response);
+      setIsLoadingGoogle(false);
     } catch (error) {
-      console.log(error)
-      // const errorCode = error.code;
-      // const errorMessage = error.message;
-      // const credential = GoogleAuthProvider.credentialFromError(error);
-      // console.log(error);
-      // console.log(errorCode);
-      // console.log(errorMessage);
-      // console.log(credential);
+      setIsLoadingGoogle(false);
+      console.log(error);
+      if (
+        error?.response?.data?.message?.message === "Email already registered"
+      ) {
+        // navigate("/login");
+        setIsModalErr((prevValue) => ({
+          ...prevValue,
+          isErr: true,
+          errMsg: "Sorry, your Google Account is already registered.",
+        }));
+      }
     }
   };
 
@@ -334,6 +308,19 @@ const Register = () => {
           justifyContent: "center",
           alignItems: "center",
           // minHeight: "90vh",
+
+          ...(isXs
+            ? {}
+            : {
+                backgroundImage: `url(${
+                  mode === "light" ? "/register.png" : "/register2.png"
+                })`,
+                backgroundSize: "auto",
+                backgroundPosition: "left",
+                backgroundPositionY: "5vh",
+                backgroundPositionX: "3vw",
+                backgroundRepeat: "no-repeat",
+              }),
         }}>
         <PaperTemplate title="Register" onClick={() => navigate("/login")}>
           <TextFieldTemplate
@@ -410,7 +397,7 @@ const Register = () => {
           <ButtonTemplate
             title="GOOGLE"
             onClick={handleRegisterGoogle}
-            // isLoading={isLoading}
+            isLoading={isLoadingGoogle}
             startIcon={<GoogleIcon />}
             variant="outlined"
             sx={{ color: "primary.main", marginBottom: "5%" }}
@@ -426,9 +413,24 @@ const Register = () => {
             }))
           }
         />
-        <ModalConfirmationTemplate open={isModalSuccess}>
+
+        <ModalSuccessTemplate
+          text="Verification Email sent!"
+          open={isModalSuccess}>
+          <Typography
+            variant="h5"
+            color="text.secondary"
+            sx={{ marginTop: "5%" }}>
+            Please wait approximately <strong>1 minute</strong> and check your
+            Inbox/Spam folder.
+            <br />
+            <br />
+            <Typography variant="body1">
+              Still have not received the Email ? Click the button below to
+              resend.
+            </Typography>
+          </Typography>
           <Stack
-            // spacing={0}
             direction="row"
             justifyContent="space-around"
             alignItems="center">
@@ -445,7 +447,7 @@ const Register = () => {
               sx={{ width: "40%" }}
             />
           </Stack>
-        </ModalConfirmationTemplate>
+        </ModalSuccessTemplate>
       </ContainerTemplate>
     </>
   );

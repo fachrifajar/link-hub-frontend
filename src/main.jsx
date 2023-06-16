@@ -12,6 +12,7 @@ import store from "./store/index";
 import App from "./App.jsx";
 import Register from "./pages/auth/register";
 import Login from "./pages/auth/login";
+import Google from "./pages/auth/google";
 
 const router = createBrowserRouter([
   // {
@@ -42,6 +43,10 @@ const router = createBrowserRouter([
   {
     path: "/login",
     element: <Login />,
+  },
+  {
+    path: "/auth",
+    element: <Google />,
   },
 ]);
 

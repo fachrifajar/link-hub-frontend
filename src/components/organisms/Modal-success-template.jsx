@@ -2,14 +2,15 @@ import React from "react";
 import { Modal, Card, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
-import ArrowRightAltIcon from "@mui/icons-material/ArrowRightAlt";"../atoms/Button-template";
+import ArrowRightAltIcon from "@mui/icons-material/ArrowRightAlt";
+("../atoms/Button-template");
 import { useNavigate } from "react-router-dom";
 
 const MyModal = styled(Modal)({
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  marginBottom: "30vh"
+  marginBottom: "30vh",
 });
 
 const MyCard = styled(Card)({
@@ -27,13 +28,12 @@ const ModalSuccessTemplate = ({ open, onClose, text, children }) => {
         <MyCard>
           <CheckCircleOutlineIcon color="success" sx={{ fontSize: "50px" }} />
           <Typography
-            variant="h5"
+            variant="h4"
             color="text.secondary"
             sx={{
-              fontSize: { xs: "20px", sm: "24px", md: "24px" },
-              marginTop: "20px",
+              marginTop: "2%",
             }}>
-            {text}
+            <strong>{text}</strong>
           </Typography>
           {children}
         </MyCard>

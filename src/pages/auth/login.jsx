@@ -2,7 +2,13 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-import { InputAdornment, IconButton, Divider, Typography } from "@mui/material";
+import {
+  InputAdornment,
+  IconButton,
+  Divider,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import GoogleIcon from "@mui/icons-material/Google";
@@ -32,7 +38,7 @@ const Login = () => {
   document.title = "Login";
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
+  const isXs = useMediaQuery("(max-width: 600px)");
   const [mode, setMode] = React.useState(
     localStorage.getItem("selectedTheme") || "light"
   );
@@ -49,13 +55,16 @@ const Login = () => {
   });
 
   const [isLoading, setIsLoading] = React.useState(false);
+  const [isLoadingGoogle, setIsLoadingGoogle] = React.useState(false);
   const [isDisabled, setIsDisabled] = React.useState(true);
   const [isModalSuccess, setIsModalSuccess] = React.useState(false);
   const [isModalErr, setIsModalErr] = React.useState({
     isErr: false,
     errMsg: "",
   });
+
   const [authData, setAuthData] = React.useState(null);
+  const [redirect, setRedirect] = React.useState(null);
 
   const handleChangeEmail = (event) => {
     const newValue = event.target.value;
@@ -130,38 +139,82 @@ const Login = () => {
     }
   };
 
-  const firebaseAuth = () => {
-    setIsLoading(true);
+  const firebaseAuth = async () => {
+    try {
+      setIsLoading(true);
 
-    signInWithEmailAndPassword(auth, email?.value, pwd?.value)
-      .then((userCredential) => {
-        onAuthStateChanged(auth, (user) => {
-          if (user) {
-            if (!user?.emailVerified) {
-              console.log("NOT VERIFIED");
-              setIsModalErr((prevValue) => ({
-                ...prevValue,
-                isErr: true,
-                errMsg: "Email not verified. Please check your inbox",
-              }));
-            } else {
-              dispatch(
-                authReducer.setAuth({
-                  data: authData,
-                })
-              );
-              setIsModalSuccess(true);
-            }
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email?.value,
+        pwd?.value
+      );
+      const user = userCredential.user;
+
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          if (!user.emailVerified) {
+            console.log("NOT VERIFIED");
+            setIsModalErr((prevValue) => ({
+              ...prevValue,
+              isErr: true,
+              errMsg: "EMAIL NOT VERIFIED \nPlease check your Inbox/Spam",
+            }));
+          } else {
+            dispatch(
+              authReducer.setAuth({
+                data: authData,
+              })
+            );
+            setRedirect("/");
+            setIsModalSuccess(true);
           }
-        });
-      })
-      .finally(() => {
-        setIsLoading(false);
-      })
-      .catch((error) => {
-        setIsLoading(false);
-        console.log(error);
+        }
       });
+
+      setIsLoading(false);
+    } catch (error) {
+      setIsLoading(false);
+      console.log(error);
+    }
+  };
+
+  const handleLoginGoogle = async () => {
+    try {
+      setIsLoadingGoogle(true);
+      const provider = new GoogleAuthProvider();
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+      console.log(user);
+
+      const response = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/auth/login`,
+        {
+          email: user?.email,
+          pwd: import.meta.env.VITE_SECRET_PWD,
+        }
+      );
+
+      dispatch(
+        authReducer.setAuth({
+          data: response?.data?.data,
+        })
+      );
+      setRedirect("/auth");
+      setIsModalSuccess(true);
+      setIsLoadingGoogle(false);
+    } catch (error) {
+      setIsLoadingGoogle(false);
+      console.log(error);
+      if (error?.response?.data?.message === "Email not found") {
+        setIsModalErr((prevValue) => ({
+          ...prevValue,
+          isErr: true,
+          errMsg:
+            "Sorry, your Google Account is not registered.\nPlease register your account first.",
+        }));
+        // navigate("/register");
+      }
+    }
   };
 
   React.useEffect(() => {
@@ -175,12 +228,26 @@ const Login = () => {
   return (
     <>
       <NavbarTemplate _setTheme={mode} getTheme={(e) => setMode(e)} />
+
       <ContainerTemplate
         _setTheme={mode}
         sx={{
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
+
+          ...(isXs
+            ? {}
+            : {
+                backgroundImage: `url(${
+                  mode === "light" ? "/register.png" : "/register2.png"
+                })`,
+                backgroundSize: "auto",
+                backgroundPosition: "left",
+                backgroundPositionY: "5vh",
+                backgroundPositionX: "3vw",
+                backgroundRepeat: "no-repeat",
+              }),
         }}>
         <PaperTemplate title="Login" onClick={() => navigate("/register")}>
           <TextFieldTemplate
@@ -230,8 +297,8 @@ const Login = () => {
 
           <ButtonTemplate
             title="GOOGLE"
-            // onClick={handleRegisterGoogle}
-            // isLoading={isLoading}
+            onClick={handleLoginGoogle}
+            isLoading={isLoadingGoogle}
             startIcon={<GoogleIcon />}
             variant="outlined"
             sx={{ color: "primary.main", marginBottom: "5%" }}
@@ -251,10 +318,10 @@ const Login = () => {
           <ButtonTemplate
             title="Get Started"
             color="success"
-            sx={{ width: "100%" }}
+            sx={{ width: "100%", fontSize: "18px" }}
             endIcon={<ArrowRightAltIcon />}
             onClick={() => {
-              navigate("/");
+              navigate(`${redirect}`);
             }}
           />
         </ModalSuccessTemplate>

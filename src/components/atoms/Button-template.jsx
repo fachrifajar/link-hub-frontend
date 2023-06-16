@@ -47,7 +47,7 @@ const ButtonTemplate = ({
       startIcon={startIcon}
       size={size}
       sx={{
-        borderRadius: "20px",
+        borderRadius: "50px",
         marginTop: "20px",
         // color: "white",
         textTransform: "none",
