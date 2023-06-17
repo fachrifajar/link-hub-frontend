@@ -28,9 +28,12 @@ const Google = () => {
     value: "",
     isDisabled: true,
   });
-  const [authData, setAuthData] = React.useState(
-    useSelector((state) => state?.auth?.data?.data)
-  );
+  // const [authData, setAuthData] = React.useState(
+  //   useSelector((state) => state?.auth?.data?.data)
+  // );
+
+  const [authDataRedux, setAuthDataRedux] = React.useState([]);
+
   const [isLoading, setIsLoading] = React.useState(false);
 
   const [isSuccess, setIsSuccess] = React.useState(false);
@@ -74,7 +77,7 @@ const Google = () => {
       }));
       setIsSuccess(false);
       setIsLoading(true);
-      let accessToken = authData?.accessToken;
+      let accessToken = authDataRedux?.accessToken;
 
       if (newAccessToken.length) {
         accessToken = newAccessToken;
@@ -97,7 +100,7 @@ const Google = () => {
       dispatch(
         authReducer.setAuth({
           data: {
-            ...authData,
+            ...authDataRedux,
             username: newUsername,
           },
         })
@@ -126,14 +129,14 @@ const Google = () => {
   const handleRefToken = async () => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_BASE_URL}/auth/refresh/${authData?.id}`,
+        `${import.meta.env.VITE_BASE_URL}/auth/refresh/${authDataRedux?.id}`,
         {
           username: username?.value,
         }
       );
       const newAccessToken = response?.data?.data?.getRefreshToken;
 
-      setAuthData((prevAuthData) => ({
+      authDataRedux((prevAuthData) => ({
         ...prevAuthData,
         accessToken: newAccessToken,
       }));
@@ -145,7 +148,7 @@ const Google = () => {
   };
 
   React.useEffect(() => {
-    if (!authData) {
+    if (!authDataRedux) {
       navigate("/login");
     }
 
@@ -164,7 +167,13 @@ const Google = () => {
 
   return (
     <>
-      <NavbarTemplate _setTheme={mode} getTheme={(e) => setMode(e)} />
+      <NavbarTemplate
+        _setTheme={mode}
+        getTheme={(e) => setMode(e)}
+        getAuthDataRedux={(e) => {
+          setAuthDataRedux(e);
+        }}
+      />
       <ContainerTemplate
         _setTheme={mode}
         sx={{
@@ -262,7 +271,7 @@ const Google = () => {
             sx={{ width: "100%", fontSize: "18px" }}
             endIcon={<ArrowRightAltIcon />}
             onClick={() => {
-              navigate("/admin");
+              navigate("/profile");
             }}
           />
         </ModalSuccessTemplate>

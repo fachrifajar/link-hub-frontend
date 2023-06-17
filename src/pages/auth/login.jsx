@@ -172,7 +172,7 @@ const Login = () => {
                 data: authData,
               })
             );
-            setRedirect("/admin");
+            setRedirect("/profile");
             setIsModalSuccess(true);
           }
         }
@@ -209,7 +209,15 @@ const Login = () => {
           data: response?.data?.data,
         })
       );
-      setRedirect("/auth");
+
+      const validateUsername = response?.data?.data?.username.split("-")[0];
+
+      if (validateUsername == "firebase") {
+        setRedirect("/auth");
+      } else {
+        setRedirect("/profile");
+      }
+
       setIsModalSuccess(true);
       setIsLoadingGoogle(false);
     } catch (error) {
@@ -229,7 +237,7 @@ const Login = () => {
 
   React.useEffect(() => {
     if (authDataRedux) {
-      navigate("/admin");
+      navigate("/profile");
     }
 
     if (email?.value && pwd?.value) {

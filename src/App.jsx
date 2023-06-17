@@ -7,17 +7,27 @@ import NavbarTemplate from "./components/organisms/Navbar-template";
 import ContainerTemplate from "./components/atoms/Container-template";
 import ButtonTemplate from "./components/atoms/Button-template";
 
+import theme from "./theme";
+
 const App = () => {
   document.title = "Home";
   const [mode, setMode] = React.useState(
     localStorage.getItem("selectedTheme") || "light"
   );
+  const [authDataRedux, setAuthDataRedux] = React.useState([]);
+
   const isXs = useMediaQuery("(max-width: 600px)");
   const navigate = useNavigate();
 
   return (
     <>
-      <NavbarTemplate _setTheme={mode} getTheme={(e) => setMode(e)} />
+      <NavbarTemplate
+        _setTheme={mode}
+        getTheme={(e) => setMode(e)}
+        getAuthDataRedux={(e) => {
+          setAuthDataRedux(e);
+        }}
+      />
 
       <ContainerTemplate
         _setTheme={mode}
@@ -68,19 +78,21 @@ const App = () => {
             Get your personalized URL and share across your favorite social
             media for free.
           </Typography>
+
           <ButtonTemplate
-            title="Get Started"
+            title={!authDataRedux ? "Join Now" : "Get Started"}
             size="large"
             endIcon={<ArrowForwardIcon />}
-            onClick={() => navigate("/register")}
+            onClick={() => {
+              if (!authDataRedux) {
+                navigate("/register");
+              } else {
+                navigate("/profile");
+              }
+            }}
             sx={{
               bgcolor: "primary.main",
               borderRadius: "10px",
-              // "&:hover": {
-              //   "& .MuiSvgIcon-root": {
-              //     marginLeft: 2,
-              //   },
-              // },
             }}
           />
         </Box>

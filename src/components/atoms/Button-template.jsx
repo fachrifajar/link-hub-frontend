@@ -26,6 +26,7 @@ const ButtonTemplate = ({
         disabled={disabled}
         onClick={onClick}
         size={size}
+        color={color}
         sx={{
           borderRadius: "20px",
           marginTop: "20px",

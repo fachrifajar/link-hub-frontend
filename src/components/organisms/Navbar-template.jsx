@@ -1,8 +1,21 @@
-import { Switch, styled, Stack, Typography } from "@mui/material";
+import {
+  Switch,
+  styled,
+  Stack,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
+import { useSelector, useDispatch } from "react-redux";
+import * as authReducer from "../../store/reducer/auth";
+import { useNavigate } from "react-router-dom";
+
 import React from "react";
 import theme from "../../theme";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
+import ButtonTemplate from "../atoms/Button-template";
+import DrawerTemplate from "./Drawer-template";
+
 const MaterialUISwitch = styled(Switch)(({ theme }) => ({
   width: 62,
   height: 34,
@@ -50,9 +63,16 @@ const MaterialUISwitch = styled(Switch)(({ theme }) => ({
   },
 }));
 
-const NavbarTemplate = ({ _setTheme, getTheme }) => {
+const NavbarTemplate = ({ _setTheme, getTheme, getAuthDataRedux }) => {
   const setTheme = theme(_setTheme);
+  const isXs = useMediaQuery("(max-width: 600px)");
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const [mode, setMode] = React.useState("light");
+  const [authDataRedux, setAuthDataRedux] = React.useState(
+    useSelector((state) => state?.auth?.data?.data)
+  );
 
   const handleSwitchChange = () => {
     setMode((prevMode) => (prevMode === "light" ? "dark" : "light"));
@@ -60,38 +80,84 @@ const NavbarTemplate = ({ _setTheme, getTheme }) => {
     localStorage.setItem("selectedTheme", mode);
   };
 
+  const handleLogout = () => {
+    dispatch(authReducer.deleteAuth());
+    window.location.reload();
+  };
+
+  React.useEffect(() => {
+    if (typeof getAuthDataRedux === "function") {
+      getAuthDataRedux(authDataRedux);
+    }
+  }, [authDataRedux, getAuthDataRedux]);
   return (
     <>
       <ThemeProvider theme={setTheme}>
         <CssBaseline />
-        <Stack direction="row" justifyContent="space-between">
-          <Stack m={2}>
-            <Typography
-              variant="h6"
-              noWrap
-              component="a"
-              sx={{
-                mr: 2,
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
+          m={2}>
+          <Typography
+            variant="h6"
+            noWrap
+            component="a"
+            sx={{
+              fontFamily: "monospace",
+              fontWeight: 700,
+              letterSpacing: ".3rem",
+              textDecoration: "none",
+              color: "text.primary",
+              "& span": {
+                color: "white",
                 fontFamily: "monospace",
-                fontWeight: 700,
-                letterSpacing: ".3rem",
-                textDecoration: "none",
-                color: "text.primary",
-                "& span": {
-                  color: "white",
-                  fontFamily: "monospace",
-                  borderRadius: "5px",
-                  paddingLeft: "5px",
-                  bgcolor: "primary.main",
-                },
-              }}>
-              Link
-              <span>Hub</span>
-            </Typography>
-          </Stack>
-          <Stack m={2}>
-            <MaterialUISwitch onChange={handleSwitchChange} />
-          </Stack>
+                borderRadius: "5px",
+                paddingLeft: "5px",
+                bgcolor: "primary.main",
+              },
+            }}>
+            Link
+            <span>Hub</span>
+          </Typography>
+          {!isXs && (
+            <Stack
+              direction="row"
+              spacing={2}
+              alignItems="center"
+              sx={{ alignItems: "center" }}>
+              {/* {authDataRedux && (
+                <ButtonTemplate
+                  title="Admin"
+                  sx={{
+                    marginTop: 0,
+                    borderRadius: "5px",
+                  }}
+                />
+              )} */}
+              {authDataRedux && (
+                <ButtonTemplate
+                  color="secondary"
+                  variant="outlined"
+                  title="Log Out"
+                  onClick={handleLogout}
+                  sx={{
+                    marginTop: 0,
+                    borderRadius: "50px",
+                  }}
+                />
+              )}
+              <MaterialUISwitch onChange={handleSwitchChange} />
+            </Stack>
+          )}
+          {isXs && (
+            <DrawerTemplate
+              _getAuthDataRedux={authDataRedux}
+              onClick_profile={() => navigate("/profile")}
+              onClick_logout={handleLogout}>
+              <MaterialUISwitch onChange={handleSwitchChange} />
+            </DrawerTemplate>
+          )}
         </Stack>
       </ThemeProvider>
     </>

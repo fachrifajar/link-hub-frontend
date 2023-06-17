@@ -19,10 +19,10 @@ const theme = (mode) =>
         default: mode === "light" ? "#fff" : "#0a1929",
         default2: mode === "light" ? "#fff" : "#181a1b",
       },
-      // custom: {
-      //   default: mode === "light" ? "#ebebeb" : "#001e3c",
-      //   default2: mode === "light" ? "#f8f5f3" : "#132f4c",
-      // },
+      custom: {
+        default: mode === "light" ? "#eff0ec" : "#a7a8a5",
+        default2: mode === "light" ? "#212121" : "#90caf9",
+      },
     },
   });
 
