@@ -4,6 +4,7 @@ import {
   Stack,
   Typography,
   useMediaQuery,
+
 } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import * as authReducer from "../../store/reducer/auth";
@@ -63,7 +64,7 @@ const MaterialUISwitch = styled(Switch)(({ theme }) => ({
   },
 }));
 
-const NavbarTemplate = ({ _setTheme, getTheme, getAuthDataRedux }) => {
+const NavbarTemplate = ({ _setTheme, getTheme, getAuthDataRedux, sx }) => {
   const setTheme = theme(_setTheme);
   const isXs = useMediaQuery("(max-width: 600px)");
   const dispatch = useDispatch();
@@ -98,17 +99,21 @@ const NavbarTemplate = ({ _setTheme, getTheme, getAuthDataRedux }) => {
           direction="row"
           alignItems="center"
           justifyContent="space-between"
-          m={2}>
+          m={2}
+          sx={{ ...sx }}>
           <Typography
             variant="h6"
             noWrap
-            component="a"
+            component="div"
             sx={{
               fontFamily: "monospace",
               fontWeight: 700,
               letterSpacing: ".3rem",
               textDecoration: "none",
               color: "text.primary",
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
               "& span": {
                 color: "white",
                 fontFamily: "monospace",
@@ -120,6 +125,7 @@ const NavbarTemplate = ({ _setTheme, getTheme, getAuthDataRedux }) => {
             Link
             <span>Hub</span>
           </Typography>
+
           {!isXs && (
             <Stack
               direction="row"
@@ -153,7 +159,7 @@ const NavbarTemplate = ({ _setTheme, getTheme, getAuthDataRedux }) => {
           {isXs && (
             <DrawerTemplate
               _getAuthDataRedux={authDataRedux}
-              onClick_profile={() => navigate("/profile")}
+              onClick_profile={() => navigate("/admin")}
               onClick_logout={handleLogout}>
               <MaterialUISwitch onChange={handleSwitchChange} />
             </DrawerTemplate>

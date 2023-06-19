@@ -14,6 +14,7 @@ import axios from "axios";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import GoogleIcon from "@mui/icons-material/Google";
+import ArrowRightAltIcon from "@mui/icons-material/ArrowRightAlt";
 
 import NavbarTemplate from "../../components/organisms/Navbar-template";
 import ContainerTemplate from "../../components/atoms/Container-template";
@@ -32,7 +33,7 @@ import {
 import { auth } from "../../config/firebase";
 
 const Register = () => {
-  document.title = "Register";
+  document.title = "LinkHub | Register";
   const navigate = useNavigate();
   const isXs = useMediaQuery("(max-width: 600px)");
   const [mode, setMode] = React.useState(
@@ -69,6 +70,7 @@ const Register = () => {
   const [isLoadingGoogle, setIsLoadingGoogle] = React.useState(false);
   const [isDisabled, setIsDisabled] = React.useState(true);
   const [isModalSuccess, setIsModalSuccess] = React.useState(false);
+  const [isModalSuccessGoogle, setIsModalSuccessGoogle] = React.useState(false);
   const [isModalErr, setIsModalErr] = React.useState({
     isErr: false,
     errMsg: "",
@@ -277,6 +279,7 @@ const Register = () => {
 
       console.log(response);
       setIsLoadingGoogle(false);
+      setIsModalSuccessGoogle(true);
     } catch (error) {
       setIsLoadingGoogle(false);
       console.log(error);
@@ -455,6 +458,18 @@ const Register = () => {
               sx={{ width: "40%" }}
             />
           </Stack>
+        </ModalSuccessTemplate>
+
+        <ModalSuccessTemplate
+          text="Account Created!"
+          open={isModalSuccessGoogle}>
+          <ButtonTemplate
+            title="Continue"
+            onClick={() => navigate("/login")}
+            color="success"
+            sx={{ width: "100%", fontSize: "18px" }}
+            endIcon={<ArrowRightAltIcon />}
+          />
         </ModalSuccessTemplate>
       </ContainerTemplate>
     </>

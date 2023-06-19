@@ -10,7 +10,7 @@ import ButtonTemplate from "./components/atoms/Button-template";
 import theme from "./theme";
 
 const App = () => {
-  document.title = "Home";
+  document.title = "LinkHub | Home";
   const [mode, setMode] = React.useState(
     localStorage.getItem("selectedTheme") || "light"
   );
@@ -87,7 +87,7 @@ const App = () => {
               if (!authDataRedux) {
                 navigate("/register");
               } else {
-                navigate("/profile");
+                navigate("/admin");
               }
             }}
             sx={{

@@ -14,6 +14,7 @@ import ModalSuccessTemplate from "../../components/organisms/Modal-success-templ
 import ArrowRightAltIcon from "@mui/icons-material/ArrowRightAlt";
 
 const Google = () => {
+  document.title = "LinkHub | New User";
   const [mode, setMode] = React.useState(
     localStorage.getItem("selectedTheme") || "light"
   );
@@ -28,11 +29,10 @@ const Google = () => {
     value: "",
     isDisabled: true,
   });
-  // const [authData, setAuthData] = React.useState(
-  //   useSelector((state) => state?.auth?.data?.data)
-  // );
 
-  const [authDataRedux, setAuthDataRedux] = React.useState([]);
+  const [authDataRedux, setAuthDataRedux] = React.useState(
+    useSelector((state) => state?.auth?.data?.data)
+  );
 
   const [isLoading, setIsLoading] = React.useState(false);
 
@@ -79,7 +79,7 @@ const Google = () => {
       setIsLoading(true);
       let accessToken = authDataRedux?.accessToken;
 
-      if (newAccessToken.length) {
+      if (newAccessToken?.length) {
         accessToken = newAccessToken;
       }
 
@@ -129,14 +129,11 @@ const Google = () => {
   const handleRefToken = async () => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_BASE_URL}/auth/refresh/${authDataRedux?.id}`,
-        {
-          username: username?.value,
-        }
+        `${import.meta.env.VITE_BASE_URL}/auth/refresh/${authDataRedux?.id}`
       );
       const newAccessToken = response?.data?.data?.getRefreshToken;
 
-      authDataRedux((prevAuthData) => ({
+      setAuthDataRedux((prevAuthData) => ({
         ...prevAuthData,
         accessToken: newAccessToken,
       }));
@@ -144,6 +141,11 @@ const Google = () => {
       handleSubmit(newAccessToken);
     } catch (error) {
       console.log("error-HandleRefToken", error);
+      const errMsg = error?.response?.data?.message;
+
+      if (errMsg == "Token Expired") {
+        console.log("HARUS LOGOUT");
+      }
     }
   };
 
@@ -271,7 +273,7 @@ const Google = () => {
             sx={{ width: "100%", fontSize: "18px" }}
             endIcon={<ArrowRightAltIcon />}
             onClick={() => {
-              navigate("/profile");
+              navigate("/admin");
             }}
           />
         </ModalSuccessTemplate>

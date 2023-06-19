@@ -35,7 +35,7 @@ import { useDispatch, useSelector } from "react-redux";
 import * as authReducer from "../../store/reducer/auth";
 
 const Login = () => {
-  document.title = "Login";
+  document.title = "LinkHub | Login";
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const isXs = useMediaQuery("(max-width: 600px)");
@@ -134,7 +134,10 @@ const Login = () => {
       // setIsLoading(false);
       console.log(response);
       setAuthData(response?.data?.data);
-      firebaseAuth();
+
+      const getAuthData = response?.data?.data
+
+      firebaseAuth(getAuthData);
     } catch (error) {
       setIsLoading(false);
       setIsModalErr((prevValue) => ({
@@ -146,7 +149,7 @@ const Login = () => {
     }
   };
 
-  const firebaseAuth = async () => {
+  const firebaseAuth = async (getAuthData) => {
     try {
       setIsLoading(true);
 
@@ -169,10 +172,10 @@ const Login = () => {
           } else {
             dispatch(
               authReducer.setAuth({
-                data: authData,
+                data: getAuthData,
               })
             );
-            setRedirect("/profile");
+            setRedirect("/admin");
             setIsModalSuccess(true);
           }
         }
@@ -215,7 +218,7 @@ const Login = () => {
       if (validateUsername == "firebase") {
         setRedirect("/auth");
       } else {
-        setRedirect("/profile");
+        setRedirect("/admin");
       }
 
       setIsModalSuccess(true);
@@ -237,7 +240,7 @@ const Login = () => {
 
   React.useEffect(() => {
     if (authDataRedux) {
-      navigate("/profile");
+      navigate("/admin");
     }
 
     if (email?.value && pwd?.value) {

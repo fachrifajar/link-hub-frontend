@@ -17,19 +17,22 @@ const TextFieldTemplate = ({
   onInput,
   name,
   variant,
-  fullWidth
+  fullWidth,
+  defaultValue,
+  margin,
 }) => {
   const isXs = useMediaQuery("(max-width: 600px)");
   return (
     <>
       <TextField
         fullWidth={fullWidth}
+        defaultValue={defaultValue}
         name={name}
         onKeyDown={onKeyDown}
         onInput={onInput}
         size={isXs ? "small" : "medium"}
         id="outlined-basic"
-        margin="normal"
+        margin={margin ? margin : "normal"}
         variant={variant ? variant : "outlined"}
         disabled={disabled}
         label={label}
@@ -63,6 +66,16 @@ const TextFieldTemplate = ({
               borderColor: "secondary",
             },
           },
+          // "& .MuiInput-underline": {
+          //   "&:before, &:after": {
+          //     borderBottom: "none",
+          //   },
+          // },
+          // "& .MuiInput-underline:hover:before, & .MuiInput-underline:hover:after":
+          //   {
+          //     border: "none",
+          //   },
+
           //   width: { xs: "20rem", sm: "20rem", md: "25rem" },
           ...sx,
         }}

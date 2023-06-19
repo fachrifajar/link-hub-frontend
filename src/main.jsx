@@ -13,6 +13,7 @@ import App from "./App.jsx";
 import Register from "./pages/auth/register";
 import Login from "./pages/auth/login";
 import Google from "./pages/auth/google";
+import Admin from "./pages/admin";
 
 const router = createBrowserRouter([
   // {
@@ -48,16 +49,20 @@ const router = createBrowserRouter([
     path: "/auth",
     element: <Google />,
   },
+  {
+    path: "/admin",
+    element: <Admin />,
+  },
 ]);
 
 const persistor = persistStore(store);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <RouterProvider router={router} />
       </PersistGate>
     </Provider>
-  </React.StrictMode>
+  // </React.StrictMode>
 );

@@ -48,7 +48,7 @@ const NavbarTemplate = ({
                 <ListItemIcon>
                   <SettingsIcon />
                 </ListItemIcon>
-                <ListItemText>Profile</ListItemText>
+                <ListItemText>Admin</ListItemText>
               </ListItemButton>
             </ListItem>
           </List>
