@@ -3,7 +3,8 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import * as authReducer from "../../store/reducer/auth";
-import * as postReducer from "../../store/reducer/post";
+import * as itemReducer from "../../store/reducer/item";
+
 import { debounce } from "lodash";
 import {
   Box,
@@ -63,10 +64,26 @@ const DragAndDrop = () => {
 
       let newPosition = "";
       for (let i = 0; i < items.length; i++) {
-        newPosition += `${items[i]?.id},`;
+        if (i !== items.length - 1) {
+          newPosition += `${items[i]?.id},`;
+        } else {
+          newPosition += `${items[i]?.id}`;
+        }
       }
       handleEditPosition(undefined, newPosition);
+
       setItemData(items);
+
+      // console.log("items-dnd", items);
+
+      dispatch(itemReducer.deleteItem());
+      dispatch(
+        itemReducer.setItem({
+          data: {
+            itemData: items,
+          },
+        })
+      );
     },
     [itemData]
   );
@@ -233,6 +250,15 @@ const DragAndDrop = () => {
 
       setItemData(response?.data?.data?.item);
 
+      dispatch(itemReducer.deleteItem());
+      dispatch(
+        itemReducer.setItem({
+          data: {
+            itemData: response?.data?.data?.item,
+          },
+        })
+      );
+
       if (init) setIsInitialRender(false);
     } catch (error) {
       if (init) setIsInitialRender(false);
@@ -358,9 +384,9 @@ const DragAndDrop = () => {
       } else if (fetchType === "post") {
         handleAddItem(newAccessToken);
       } else if (fetchType === "edit") {
-        handleEditItem(newAccessToken);
+        handleEditItem(clickedId, newAccessToken);
       } else if (fetchType === "delete") {
-        handleDeleteItem(newAccessToken);
+        handleDeleteItem(clickedId, newAccessToken);
       } else {
         handleEditPosition(newAccessToken);
       }
@@ -380,6 +406,14 @@ const DragAndDrop = () => {
       navigate("/login");
     }
     handleGetItem(undefined, true);
+    dispatch(itemReducer.deleteItem());
+    dispatch(
+      itemReducer.setItem({
+        data: {
+          itemData,
+        },
+      })
+    );
   }, []);
 
   return (

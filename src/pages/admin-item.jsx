@@ -71,12 +71,12 @@ const AdminItem = () => {
               icon={<LayersIcon />}
               iconPosition="start"
             />
-            <Tab
+            {/* <Tab
               value="profile"
               label="Profile"
               icon={<AccountBoxIcon />}
               iconPosition="start"
-            />
+            /> */}
             <Tab
               value="appearance"
               label="Appearance"
@@ -85,35 +85,10 @@ const AdminItem = () => {
             />
           </Tabs>
         </Box>
-        <Grid
-          container
-          // display="flex"
-          // justifyContent="center"
-          // alignItems="center"
-          spacing={2}
-          sx={{ paddingX: "5vh" }}>
+        <Grid container spacing={2} sx={{ paddingX: "5vh" }}>
           <Grid item md={8} sm={12} xs={12}>
             {value === "item" && (
               <>
-                {/* <Box
-                  display="flex"
-                  justifyContent="center"
-                  alignItems="center"
-                  flexDirection="column">
-                  <ButtonTemplate
-                    title="Add Item"
-                    // disabled={postData?.length === 3 ? true : false}
-                    // isLoading={isLoading}
-                    // onClick={handleAddPost}
-                    startIcon={<AddIcon />}
-                    sx={{
-                      width: "100%",
-                      fontSize: { md: "18px", sm: "18px", xs: "16px" },
-                      marginBottom: "5%",
-                    }}
-                  />
-                </Box> */}
-
                 <DragAndDrop />
               </>
             )}

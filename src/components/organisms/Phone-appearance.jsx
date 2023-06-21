@@ -1,12 +1,38 @@
 import React from "react";
 import { Box, Avatar, Typography, Stack, Skeleton } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
+import { lighten, darken } from "polished";
+import ButtonTemplate from "../atoms/Button-template";
+import DragAndDrop from "./DragAndADrop-template";
 
 const PhoneAppearance = () => {
   const [getAuthDataRedux, setGetAuthDataRedux] = React.useState(
     useSelector((state) => state?.auth?.data?.data)
   );
-  //   console.log(getAuthDataRedux);
+  const [getPostDataRedux, setGetPostDataRedux] = React.useState(
+    useSelector((state) => state?.post?.data?.data?.item)
+  );
+
+  const getItemDataRedux = useSelector(
+    (state) => state?.item?.data?.data?.itemData
+  );
+  // console.log(getItemDataRedux);
+  console.log(getPostDataRedux);
+
+  const bgDirection = getPostDataRedux?.bg_direction;
+  const bg_dir = bgDirection === "gradientUp" ? "to top" : "to bottom";
+
+  const hexColor = getPostDataRedux?.bg_color;
+  const lightenedColor = lighten(0.3, hexColor);
+  const gradientStyle = {
+    backgroundImage: `linear-gradient(${bg_dir}, ${hexColor}, ${lightenedColor})`,
+  };
+  const bgStyle =
+    getPostDataRedux?.bg === "flat" ? { bgcolor: hexColor } : gradientStyle;
+
+  const buttonOption = getPostDataRedux?.button_option?.split("-")[0];
+  const borderRadiusOption = getPostDataRedux?.button_option?.split("-")[1];
+
   return (
     <Box
       sx={{
@@ -21,7 +47,7 @@ const PhoneAppearance = () => {
         sx={{
           width: "230px",
           height: "60vh",
-          // bgcolor: "yellow",
+          ...bgStyle,
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
@@ -42,24 +68,59 @@ const PhoneAppearance = () => {
             width: "100%",
             p: 2,
           }}>
-          <Avatar sx={{ mb: 1 }}>
+          <Avatar sx={{ mb: 1, bgcolor: "#000000", color: "#FFFFFF" }}>
             {getAuthDataRedux?.username?.[0].toUpperCase()}
           </Avatar>
           <Typography
             variant="body1"
             sx={{
-              fontSize: "13px",
+              fontSize: "14px",
               fontWeight: 600,
+              color: getPostDataRedux?.font_color,
               "& span": {
                 letterSpacing: 1,
               },
             }}>
-            @<span>{getAuthDataRedux?.username}</span>
+            <span>@{getAuthDataRedux?.username}</span>
           </Typography>
+
           <Box sx={{ width: "100%", mt: "10%" }}>
-            <Skeleton animation="wave" sx={{ height: "5vh" }} />
-            <Skeleton animation="wave" sx={{ height: "5vh" }} />
-            <Skeleton animation="wave" sx={{ height: "5vh" }} />
+            {getPostDataRedux?.use_title == "1" && (
+              <Typography
+                variant="body1"
+                sx={{
+                  fontSize: "12px",
+                  fontWeight: 600,
+                  color: getPostDataRedux?.font_color,
+                  display: "flex",
+                  justifyContent: "center",
+                  mb: "5%",
+                }}>
+                {getPostDataRedux?.title}
+              </Typography>
+            )}
+
+            {getItemDataRedux?.map((item, key) => (
+              <>
+                <ButtonTemplate
+                  key={key}
+                  variant={buttonOption === "fill" ? "contained" : "outlined"}
+                  fullWidth={true}
+                  title={item?.title}
+                  sx={{
+                    bgcolor: getPostDataRedux?.button_color,
+                    color: getPostDataRedux?.button_font_color,
+                    borderRadius: borderRadiusOption,
+                    "&:hover": {
+                      bgcolor: darken(0.1, getPostDataRedux?.button_color),
+                    },
+                    marginTop: "0px",
+                    marginBottom: "5%",
+                    fontSize: "11px",
+                  }}
+                />
+              </>
+            ))}
           </Box>
         </Stack>
       </Box>

@@ -8,6 +8,7 @@ export default function CircularProgressTemplate({ sx }) {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
+        marginTop: "10%",
         ...sx,
       }}>
       <CircularProgress />

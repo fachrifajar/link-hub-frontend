@@ -246,7 +246,7 @@ const Post = () => {
     }
   };
 
-  const handleRefToken = async (fetchType,init) => {
+  const handleRefToken = async (fetchType, init) => {
     try {
       const response = await axios.get(
         `${import.meta.env.VITE_BASE_URL}/auth/refresh/${getAuthDataRedux?.id}`
@@ -330,6 +330,7 @@ const Post = () => {
                   key={item?.id}
                   icon={<HighlightAltIcon />}
                   onClick={() => {
+                    dispatch(postReducer.deletePost());
                     dispatch(
                       postReducer.setPost({
                         data: {
