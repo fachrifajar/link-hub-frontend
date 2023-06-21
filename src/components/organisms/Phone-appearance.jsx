@@ -58,6 +58,14 @@ const PhoneAppearance = () => {
           // mb: "25%",
           mt: "30%",
           position: "fixed",
+          overflow: "auto",
+          "&::-webkit-scrollbar": {
+            width: "0.1em",
+            height: "0.5em",
+          },
+          "&::-webkit-scrollbar-thumb": {
+            backgroundColor: "rgba(0, 0, 0, 0.2)",
+          },
         }}>
         <Stack
           direction="column"
