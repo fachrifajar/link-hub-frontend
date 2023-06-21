@@ -2,25 +2,32 @@ import React from "react";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import * as authReducer from "../../store/reducer/auth";
+import * as postReducer from "../../store/reducer/post";
+
+import { useNavigate } from "react-router-dom";
 
 import {
   Box,
-  Card,
   Stack,
   Typography,
   InputAdornment,
-  CardActionArea,
+  useMediaQuery,
 } from "@mui/material";
 import ButtonTemplate from "../atoms/Button-template";
 import ModalErrorTemplate from "./Modal-error-template";
 import TextFieldTemplate from "../atoms/Textfield-template";
+import CircularProgressTemplate from "../atoms/CircularProgress-template";
+import CardTemplate from "../atoms/Card-template";
 
 import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import HighlightAltIcon from "@mui/icons-material/HighlightAlt";
+
 const Post = () => {
   document.title = "LinkHub | Post";
+  const navigate = useNavigate();
+  const isXs = useMediaQuery("(max-width: 600px)");
   const dispatch = useDispatch();
 
   const [getAuthDataRedux, setGetAuthDataRedux] = React.useState(
@@ -28,16 +35,17 @@ const Post = () => {
   );
   const [postData, setPostData] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(false);
+  const [isInitialRender, setIsInitialRender] = React.useState(false);
 
   const [title, setTitle] = React.useState({
     value: "",
     key: "",
   });
 
-  const [color, setColor] = React.useState({
-    value: "",
-    key: "",
-  });
+  // const [color, setColor] = React.useState({
+  //   value: "",
+  //   key: "",
+  // });
 
   const [clickedId, setClickedId] = React.useState("");
   const [isLoadingEdit, setIsLoadingEdit] = React.useState({
@@ -56,23 +64,22 @@ const Post = () => {
 
   const handleEditPost = async (id, newAccessToken) => {
     try {
-      const accessToken = newAccessToken || getAuthDataRedux?.accessToken;
+      let accessToken;
+      if (newAccessToken) {
+        accessToken = newAccessToken;
+      }
+      accessToken = getAuthDataRedux?.accessToken;
       setIsLoadingEdit({
         isLoadingEdit: true,
         isLoadingEditKey: id,
       });
 
-      const colorValue = color?.value || "#FFFFFF";
-      console.log(colorValue);
-      console.log(title?.value);
-      console.log(id);
-      console.log(accessToken);
       const response = await axios.patch(
         `${import.meta.env.VITE_BASE_URL}/post/edit`,
         {
           title: title?.value,
           post_id: id,
-          bg_color: color?.value,
+          // bg_color: color?.value,
         },
         {
           headers: {
@@ -110,7 +117,11 @@ const Post = () => {
 
   const handleDeletePost = async (id, newAccessToken) => {
     try {
-      const accessToken = newAccessToken || getAuthDataRedux?.accessToken;
+      let accessToken;
+      if (newAccessToken) {
+        accessToken = newAccessToken;
+      }
+      accessToken = getAuthDataRedux?.accessToken;
       setIsLoadingDelete({
         isLoadingDelete: true,
         isLoadingDeleteKey: id,
@@ -150,9 +161,15 @@ const Post = () => {
     }
   };
 
-  const handleGetPost = async (newAccessToken) => {
+  const handleGetPost = async (newAccessToken, init) => {
     try {
-      const accessToken = newAccessToken || getAuthDataRedux?.accessToken;
+      if (init) setIsInitialRender(true);
+
+      let accessToken;
+      if (newAccessToken) {
+        accessToken = newAccessToken;
+      }
+      accessToken = getAuthDataRedux?.accessToken;
 
       const response = await axios.get(
         `${import.meta.env.VITE_BASE_URL}/post`,
@@ -165,11 +182,18 @@ const Post = () => {
 
       const postItems = response?.data?.data?.post;
 
-      setPostData(postItems);
+      const sortedPostItems = postItems.sort((a, b) => {
+        return new Date(a.created_at) - new Date(b.created_at);
+      });
 
-      const initialColors = postItems.map((item) => item?.bg_color);
-      setColor(initialColors);
+      setPostData(sortedPostItems);
+
+      // const initialColors = postItems.map((item) => item?.bg_color);
+      // setColor(initialColors);
+
+      if (init) setIsInitialRender(false);
     } catch (error) {
+      if (init) setIsInitialRender(false);
       console.log("error-handleGetPost", error);
 
       const errMsg = error?.response?.data?.message;
@@ -183,7 +207,11 @@ const Post = () => {
   const handleAddPost = async (newAccessToken) => {
     try {
       setIsLoading(true);
-      const accessToken = newAccessToken || getAuthDataRedux?.accessToken;
+      let accessToken;
+      if (newAccessToken) {
+        accessToken = newAccessToken;
+      }
+      accessToken = getAuthDataRedux?.accessToken;
 
       const response = await axios.post(
         `${import.meta.env.VITE_BASE_URL}/post/add`,
@@ -218,7 +246,7 @@ const Post = () => {
     }
   };
 
-  const handleRefToken = async (fetchType) => {
+  const handleRefToken = async (fetchType,init) => {
     try {
       const response = await axios.get(
         `${import.meta.env.VITE_BASE_URL}/auth/refresh/${getAuthDataRedux?.id}`
@@ -261,7 +289,7 @@ const Post = () => {
   };
 
   React.useEffect(() => {
-    handleGetPost();
+    handleGetPost(undefined, true);
   }, []);
 
   return (
@@ -278,195 +306,154 @@ const Post = () => {
           onClick={handleAddPost}
           startIcon={<AddIcon />}
           sx={{
-            width: "60%",
+            width: { md: "60%", sm: "60%", xs: "100%" },
             fontSize: { md: "18px", sm: "18px", xs: "16px" },
             marginBottom: "5%",
           }}
         />
-        {postData?.map((item, key) => {
-          const createdTime = new Date(item?.created_at);
-          const formattedDate = createdTime.toLocaleString("en-US", {
-            day: "numeric",
-            month: "long",
-            year: "numeric",
-            hour: "numeric",
-            minute: "numeric",
-            second: "numeric",
-          });
 
-          return (
-            <>
-              <Card
-                key={item?.id}
-                sx={{
-                  width: "60%",
-                  marginBottom: "1%",
-                  borderRadius: "10px",
-                  bgcolor: "background.default2",
-                  display: "flex",
-                  flexDirection: "row",
-                  px: 3,
-                  py: 1,
-                }}>
-                <CardActionArea
-                  onClick={() => console.log(item?.title)}
-                  sx={{
-                    width: "5%",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    display: "flex",
-                    mr: 5,
-                  }}>
-                  <HighlightAltIcon />
-                </CardActionArea>
+        {postData?.length && !isInitialRender ? (
+          postData?.map((item, key) => {
+            const updatedTime = new Date(item?.updated_at);
+            const formattedDate = updatedTime.toLocaleString("en-US", {
+              day: "numeric",
+              month: "long",
+              year: "numeric",
+              hour: "numeric",
+              minute: "numeric",
+              second: "numeric",
+            });
 
-                <Stack
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    width: "50%",
+            return (
+              <>
+                <CardTemplate
+                  key={item?.id}
+                  icon={<HighlightAltIcon />}
+                  onClick={() => {
+                    dispatch(
+                      postReducer.setPost({
+                        data: {
+                          item,
+                        },
+                      })
+                    );
+                    navigate(`/admin/post/${item?.id}`);
                   }}>
-                  <TextFieldTemplate
-                    label="Title"
-                    variant="standard"
-                    margin="none"
-                    defaultValue={item?.title}
-                    onChange={(e) => {
-                      setTitle({
-                        value: e.target.value,
-                        key: item?.id,
-                      });
-                    }}
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <EditIcon />
-                        </InputAdornment>
-                      ),
-                      inputProps: {
-                        maxLength: 20,
-                      },
-                    }}
+                  <Stack
                     sx={{
-                      "& .MuiInput-underline": {
-                        "&:before, &:after": {
-                          borderBottom: "none",
-                        },
-                      },
-                      "& .MuiInput-underline:hover:before, & .MuiInput-underline:hover:after":
-                        {
-                          border: "none",
-                          borderBottom: "none",
-                        },
-                      width: "auto",
-                      maxWidth: "70%",
                       display: "flex",
-                      justifyContent: "space-between",
-                    }}
-                  />
-                  <TextFieldTemplate
-                    label="Theme Color"
-                    variant="standard"
-                    value={color[key]}
-                    defaultValue={item?.bg_color}
-                    onChange={(e) => {
-                      setColor({
-                        value: e.target.value,
-                        key: item?.id,
-                      });
-                    }}
-                    type="color"
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <span
-                            style={{
-                              backgroundColor: color[key],
-                              width: "24px",
-                              height: "24px",
-                              display: "inline-block",
-                              borderRadius: "50%",
-                              marginRight: "8px",
-                            }}
-                          />
-                        </InputAdornment>
-                      ),
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <EditIcon />
-                        </InputAdornment>
-                      ),
-                    }}
-                    sx={{
-                      "& .MuiInput-underline": {
-                        "&:before, &:after": {
-                          borderBottom: "none",
+                      flexDirection: "column",
+                      width: !isXs ? "70%" : "100%",
+                    }}>
+                    <TextFieldTemplate
+                      label="Title"
+                      variant="standard"
+                      margin="none"
+                      defaultValue={item?.title}
+                      onChange={(e) => {
+                        setTitle({
+                          value: e.target.value,
+                          key: item?.id,
+                        });
+                      }}
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <EditIcon />
+                          </InputAdornment>
+                        ),
+                        inputProps: {
+                          sx: {
+                            color: "text.primary",
+                          },
+                          maxLength: 20,
                         },
-                      },
-                      "& .MuiInput-underline:hover:before, & .MuiInput-underline:hover:after":
-                        {
-                          border: "none",
-                          borderBottom: "none",
+                      }}
+                      sx={{
+                        "& .MuiInput-underline": {
+                          "&:before, &:after": {
+                            borderBottom: "none",
+                          },
                         },
-                      width: "auto",
-                      maxWidth: "70%",
-                      display: "flex",
-                      justifyContent: "space-between",
-                    }}
-                  />
-                  <Typography
-                    variant="body1"
-                    color="text.secondary"
-                    sx={{ marginY: "2%" }}>
-                    Created: <i>{formattedDate}</i>
-                  </Typography>
-                </Stack>
+                        "& .MuiInput-underline:hover:before, & .MuiInput-underline:hover:after":
+                          {
+                            border: "none",
+                            borderBottom: "none",
+                          },
+                        width: "auto",
+                        maxWidth: !isXs ? "70%" : "100%",
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
+                    />
 
-                <Stack
-                  sx={{
-                    flex: 1,
-                    display: "flex",
-                    alignItems: "flex-end",
-                    justifyContent: "space-around",
-                  }}>
-                  <ButtonTemplate
-                    title="Change"
-                    startIcon={<AddIcon />}
-                    color="success"
-                    isLoading={
-                      isLoadingEdit?.isLoadingEdit &&
-                      item?.id === isLoadingEdit?.isLoadingEditKey
-                    }
-                    onClick={() => {
-                      handleEditPost(item?.id);
-                      setClickedId(item?.id);
-                    }}
+                    <Typography
+                      variant="body1"
+                      color="text.secondary"
+                      sx={{ marginTop: "2%", fontSize: "14px" }}>
+                      {item?.created_at !== item?.updated_at
+                        ? "last Update"
+                        : "Created"}
+                      : <i>{formattedDate}</i>
+                    </Typography>
+                  </Stack>
+
+                  <Stack
+                    spacing={2}
                     sx={{
-                      marginTop: 0,
-                    }}
-                  />
-                  <ButtonTemplate
-                    title="Delete"
-                    color="error"
-                    variant="outlined"
-                    isLoading={
-                      isLoadingDelete?.isLoadingDelete &&
-                      item?.id === isLoadingDelete?.isLoadingDeleteKey
-                    }
-                    onClick={() => {
-                      handleDeletePost(item?.id);
-                      setClickedId(item?.id);
-                    }}
-                    startIcon={<DeleteIcon />}
-                    sx={{
-                      marginTop: 0,
-                    }}
-                  />
-                </Stack>
-              </Card>
-            </>
-          );
-        })}
+                      flex: 1,
+                      display: "flex",
+                      alignItems: "flex-end",
+                      justifyContent: "space-between",
+                      flexDirection: isXs ? "row-reverse" : "column",
+                      mt: isXs ? 2 : 0,
+                    }}>
+                    <ButtonTemplate
+                      title="Change"
+                      startIcon={<AddIcon />}
+                      color="success"
+                      isLoading={
+                        isLoadingEdit?.isLoadingEdit &&
+                        item?.id === isLoadingEdit?.isLoadingEditKey
+                      }
+                      onClick={() => {
+                        handleEditPost(item?.id);
+                        setClickedId(item?.id);
+                      }}
+                      sx={{
+                        marginTop: 0,
+                        width: "100px",
+                      }}
+                    />
+                    <ButtonTemplate
+                      title="Delete"
+                      color="error"
+                      variant="outlined"
+                      isLoading={
+                        isLoadingDelete?.isLoadingDelete &&
+                        item?.id === isLoadingDelete?.isLoadingDeleteKey
+                      }
+                      onClick={() => {
+                        handleDeletePost(item?.id);
+                        setClickedId(item?.id);
+                      }}
+                      startIcon={<DeleteIcon />}
+                      sx={{
+                        marginTop: 0,
+                        width: "100px",
+                      }}
+                    />
+                  </Stack>
+                </CardTemplate>
+              </>
+            );
+          })
+        ) : isInitialRender ? (
+          <CircularProgressTemplate />
+        ) : (
+          <img src="/post_null2.png" alt="post_null2" />
+        )}
+
         <ModalErrorTemplate
           open={modalErr?.isErr}
           onClose={() => {

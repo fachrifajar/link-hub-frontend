@@ -14,6 +14,7 @@ import Register from "./pages/auth/register";
 import Login from "./pages/auth/login";
 import Google from "./pages/auth/google";
 import Admin from "./pages/admin";
+import AdminItem from "./pages/admin-item";
 
 const router = createBrowserRouter([
   // {
@@ -53,16 +54,20 @@ const router = createBrowserRouter([
     path: "/admin",
     element: <Admin />,
   },
+  {
+    path: "/admin/post/:id",
+    element: <AdminItem />,
+  },
 ]);
 
 const persistor = persistStore(store);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   // <React.StrictMode>
-    <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
-        <RouterProvider router={router} />
-      </PersistGate>
-    </Provider>
+  <Provider store={store}>
+    <PersistGate loading={null} persistor={persistor}>
+      <RouterProvider router={router} />
+    </PersistGate>
+  </Provider>
   // </React.StrictMode>
 );

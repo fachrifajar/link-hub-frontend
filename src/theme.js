@@ -18,6 +18,7 @@ const theme = (mode) =>
       background: {
         default: mode === "light" ? "#fff" : "#0a1929",
         default2: mode === "light" ? "#f3f3f1" : "#1a2027",
+        default3: mode === "light" ? "#1a2027" : "#1a2027",
       },
       custom: {
         default: mode === "light" ? "#eff0ec" : "#a7a8a5",
