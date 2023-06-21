@@ -17,6 +17,7 @@ import CardTemplate from "../atoms/Card-template";
 import ButtonTemplate from "../atoms/Button-template";
 import CircularProgressTemplate from "../atoms/CircularProgress-template";
 import TextFieldTemplate from "../atoms/Textfield-template";
+import ModalErrorTemplate from "./Modal-error-template";
 
 import DeleteIcon from "@mui/icons-material/Delete";
 import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
@@ -60,6 +61,11 @@ const DragAndDrop = () => {
       const [reorderedItem] = items.splice(result.source.index, 1);
       items.splice(result.destination.index, 0, reorderedItem);
 
+      let newPosition = "";
+      for (let i = 0; i < items.length; i++) {
+        newPosition += `${items[i]?.id},`;
+      }
+      handleEditPosition(undefined, newPosition);
       setItemData(items);
     },
     [itemData]
@@ -283,6 +289,48 @@ const DragAndDrop = () => {
     }
   };
 
+  const handleEditPosition = async (newAccessToken, newPosition) => {
+    try {
+      let accessToken;
+      if (newAccessToken) {
+        accessToken = newAccessToken;
+      }
+      accessToken = getAuthDataRedux?.accessToken;
+
+      const getUrl = window.location.href.split("/");
+      const id = getUrl[getUrl.length - 1];
+
+      const response = await axios.patch(
+        `${import.meta.env.VITE_BASE_URL}/post/edit`,
+        {
+          post_id: id,
+          items: newPosition,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+
+      handleGetItem();
+    } catch (error) {
+      console.log("error-handleEditPosition", error);
+
+      const errMsg = error?.response?.data?.message;
+
+      if (errMsg === "Token Expired") {
+        handleRefToken("position");
+      } else {
+        setModalErr((prevValue) => ({
+          ...prevValue,
+          isErr: true,
+          errMsg,
+        }));
+      }
+    }
+  };
+
   const handleRefToken = async (fetchType, init) => {
     try {
       if (init) setIsInitialRender(true);
@@ -313,6 +361,8 @@ const DragAndDrop = () => {
         handleEditItem(newAccessToken);
       } else if (fetchType === "delete") {
         handleDeleteItem(newAccessToken);
+      } else {
+        handleEditPosition(newAccessToken);
       }
     } catch (error) {
       if (init) setIsInitialRender(false);
@@ -339,12 +389,14 @@ const DragAndDrop = () => {
         startIcon={<AddIcon />}
         onClick={handleAddItem}
         isLoading={isLoading}
+        disabled={itemData?.length === 10}
         sx={{
           width: "100%",
           fontSize: { md: "18px", sm: "18px", xs: "16px" },
           marginBottom: "5%",
         }}
       />
+
       <DragDropContext onDragEnd={handleDragEnd}>
         <Droppable droppableId="cards">
           {(provided) => (
@@ -531,6 +583,16 @@ const DragAndDrop = () => {
               )}
 
               {provided.placeholder}
+              <ModalErrorTemplate
+                open={modalErr?.isErr}
+                onClose={() => {
+                  setModalErr((prevValue) => ({
+                    ...prevValue,
+                    isErr: false,
+                  }));
+                }}
+                text={modalErr?.errMsg}
+              />
             </Box>
           )}
         </Droppable>

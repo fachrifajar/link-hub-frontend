@@ -19,7 +19,7 @@ const PhoneAppearance = () => {
       }}>
       <Box
         sx={{
-          width: "15vw",
+          width: "230px",
           height: "60vh",
           // bgcolor: "yellow",
           display: "flex",
@@ -29,7 +29,9 @@ const PhoneAppearance = () => {
           borderStyle: "solid",
           borderWidth: 10,
           borderRadius: "25px",
-          mb: "25%",
+          // mb: "25%",
+          mt: "30%",
+          position: "fixed",
         }}>
         <Stack
           direction="column"
