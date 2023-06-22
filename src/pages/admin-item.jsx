@@ -2,21 +2,21 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-import { Grid, Box, Tab, Tabs } from "@mui/material";
+import { Grid, Box, Tab, Tabs, useMediaQuery } from "@mui/material";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import PhoneAppearance from "../components/organisms/Phone-appearance";
 import LayersIcon from "@mui/icons-material/Layers";
-import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import LaunchIcon from "@mui/icons-material/Launch";
-import AddIcon from "@mui/icons-material/Add";
+
 
 import NavbarTemplate from "../components/organisms/Navbar-template";
 import ContainerTemplate from "../components/atoms/Container-template";
 import DragAndDrop from "../components/organisms/DragAndADrop-template";
-import ButtonTemplate from "../components/atoms/Button-template";
+import AppearanceEdit from "../components/organisms/Appearance-edit";
 
 const AdminItem = () => {
   document.title = "LinkHub | Admin Post";
+  const isXs = useMediaQuery("(max-width: 600px)");
   const navigate = useNavigate();
   const [mode, setMode] = React.useState(
     localStorage.getItem("selectedTheme") || "light"
@@ -24,6 +24,7 @@ const AdminItem = () => {
   const [getAuthDataRedux, setGetAuthDataRedux] = React.useState(
     useSelector((state) => state?.auth?.data?.data)
   );
+
   const [value, setValue] = React.useState("item");
 
   const handleChange = (event, newValue) => {
@@ -47,7 +48,7 @@ const AdminItem = () => {
           // justifyContent: "center",
           // alignItems: "center",
           // paddingX: "5vh",
-          padding: "0 5vw",
+          padding: isXs ? "0" : "0 5vw",
         }}>
         <Box
           // p={{ md: "0 10vw", sm: "0 10vw", xs: "0 5vw" }}
@@ -87,25 +88,23 @@ const AdminItem = () => {
         </Box>
         <Grid container spacing={2} sx={{ paddingX: "5vh" }}>
           <Grid item md={8} sm={12} xs={12}>
-            {value === "item" && (
-              <>
-                <DragAndDrop />
-              </>
-            )}
+            {value === "item" && <DragAndDrop />}
+            {value === "appearance" && <AppearanceEdit />}
           </Grid>
           <Grid
             item
             md={4}
             sm={0}
             xs={0}
-            sx={
-              {
-                // borderLeftColor: "text.secondary",
-                // borderLeftStyle: "solid",
-                // borderLeftWidth: 1,
-                // width: "100%"
-              }
-            }>
+            sx={{
+              // borderLeftColor: "text.secondary",
+              // borderLeftStyle: "solid",
+              // borderLeftWidth: 1,
+              // width: "100%",
+              // height: "auto",
+              display: { md: "block", sm: "none", xs: "none" },
+            }}>
+            {/* {!isXs && <PhoneAppearance />} */}
             <PhoneAppearance />
           </Grid>
         </Grid>

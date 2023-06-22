@@ -122,10 +122,11 @@ const DragAndDrop = () => {
   const handleEditItem = async (id, newAccessToken) => {
     try {
       let accessToken;
-      if (newAccessToken) {
+      if (newAccessToken?.length) {
         accessToken = newAccessToken;
+      } else {
+        accessToken = getAuthDataRedux?.accessToken;
       }
-      accessToken = getAuthDataRedux?.accessToken;
       setIsLoadingEdit({
         isLoadingEdit: true,
         isLoadingEditKey: id,
@@ -183,10 +184,11 @@ const DragAndDrop = () => {
   const handleDeleteItem = async (id, newAccessToken) => {
     try {
       let accessToken;
-      if (newAccessToken) {
+      if (newAccessToken?.length) {
         accessToken = newAccessToken;
+      } else {
+        accessToken = getAuthDataRedux?.accessToken;
       }
-      accessToken = getAuthDataRedux?.accessToken;
       setIsLoadingDelete({
         isLoadingDelete: true,
         isLoadingDeleteKey: id,
@@ -234,10 +236,11 @@ const DragAndDrop = () => {
       setGetId(id);
 
       let accessToken;
-      if (newAccessToken) {
+      if (newAccessToken?.length) {
         accessToken = newAccessToken;
+      } else {
+        accessToken = getAuthDataRedux?.accessToken;
       }
-      accessToken = getAuthDataRedux?.accessToken;
 
       const response = await axios.get(
         `${import.meta.env.VITE_BASE_URL}/item/${id}`,
@@ -277,15 +280,16 @@ const DragAndDrop = () => {
       setIsLoading(true);
 
       let accessToken;
-      if (newAccessToken) {
+      if (newAccessToken?.length) {
         accessToken = newAccessToken;
+      } else {
+        accessToken = getAuthDataRedux?.accessToken;
       }
-      accessToken = getAuthDataRedux?.accessToken;
       const response = await axios.post(
         `${import.meta.env.VITE_BASE_URL}/item/add`,
         {
-          title: "",
-          url: "",
+          title: "item",
+          url: "www.item.com",
           post_id: getId,
         },
         {
@@ -318,10 +322,11 @@ const DragAndDrop = () => {
   const handleEditPosition = async (newAccessToken, newPosition) => {
     try {
       let accessToken;
-      if (newAccessToken) {
+      if (newAccessToken?.length) {
         accessToken = newAccessToken;
+      } else {
+        accessToken = getAuthDataRedux?.accessToken;
       }
-      accessToken = getAuthDataRedux?.accessToken;
 
       const getUrl = window.location.href.split("/");
       const id = getUrl[getUrl.length - 1];

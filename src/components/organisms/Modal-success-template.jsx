@@ -2,9 +2,6 @@ import React from "react";
 import { Modal, Card, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
-import ArrowRightAltIcon from "@mui/icons-material/ArrowRightAlt";
-("../atoms/Button-template");
-import { useNavigate } from "react-router-dom";
 
 const MyModal = styled(Modal)({
   display: "flex",

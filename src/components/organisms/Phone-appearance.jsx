@@ -1,14 +1,15 @@
 import React from "react";
-import { Box, Avatar, Typography, Stack, Skeleton } from "@mui/material";
-import { useDispatch, useSelector } from "react-redux";
+import { Box, Avatar, Typography, Stack } from "@mui/material";
+import { useSelector } from "react-redux";
 import { lighten, darken } from "polished";
 import ButtonTemplate from "../atoms/Button-template";
-import DragAndDrop from "./DragAndADrop-template";
 
 const PhoneAppearance = () => {
-  const [getAuthDataRedux, setGetAuthDataRedux] = React.useState(
-    useSelector((state) => state?.auth?.data?.data)
-  );
+  // const [getAuthDataRedux, setGetAuthDataRedux] = React.useState(
+  //   useSelector((state) => state?.auth?.data?.data)
+  // );
+  const getAuthDataRedux = useSelector((state) => state?.auth?.data?.data);
+
   const [getPostDataRedux, setGetPostDataRedux] = React.useState(
     useSelector((state) => state?.post?.data?.data?.item)
   );
@@ -17,7 +18,7 @@ const PhoneAppearance = () => {
     (state) => state?.item?.data?.data?.itemData
   );
   // console.log(getItemDataRedux);
-  console.log(getPostDataRedux);
+  // console.log(getPostDataRedux);
 
   const bgDirection = getPostDataRedux?.bg_direction;
   const bg_dir = bgDirection === "gradientUp" ? "to top" : "to bottom";
@@ -56,7 +57,7 @@ const PhoneAppearance = () => {
           borderWidth: 10,
           borderRadius: "25px",
           // mb: "25%",
-          mt: "30%",
+          mt: "40%",
           position: "fixed",
           overflow: "auto",
           "&::-webkit-scrollbar": {
@@ -92,17 +93,17 @@ const PhoneAppearance = () => {
             <span>@{getAuthDataRedux?.username}</span>
           </Typography>
 
-          <Box sx={{ width: "100%", mt: "10%" }}>
+          <Box sx={{ width: "100%" }}>
             {getPostDataRedux?.use_title == "1" && (
               <Typography
                 variant="body1"
                 sx={{
                   fontSize: "12px",
-                  fontWeight: 600,
+                  // fontWeight: 600,
                   color: getPostDataRedux?.font_color,
                   display: "flex",
                   justifyContent: "center",
-                  mb: "5%",
+                  mb: "10%",
                 }}>
                 {getPostDataRedux?.title}
               </Typography>

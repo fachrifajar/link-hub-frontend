@@ -30,9 +30,10 @@ const Post = () => {
   const isXs = useMediaQuery("(max-width: 600px)");
   const dispatch = useDispatch();
 
-  const [getAuthDataRedux, setGetAuthDataRedux] = React.useState(
-    useSelector((state) => state?.auth?.data?.data)
-  );
+  // const [getAuthDataRedux, setGetAuthDataRedux] = React.useState(
+  //   useSelector((state) => state?.auth?.data?.data)
+  // );
+  const getAuthDataRedux = useSelector((state) => state?.auth?.data?.data);
   const [postData, setPostData] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(false);
   const [isInitialRender, setIsInitialRender] = React.useState(false);
@@ -65,10 +66,11 @@ const Post = () => {
   const handleEditPost = async (id, newAccessToken) => {
     try {
       let accessToken;
-      if (newAccessToken) {
+      if (newAccessToken?.length) {
         accessToken = newAccessToken;
+      } else {
+        accessToken = getAuthDataRedux?.accessToken;
       }
-      accessToken = getAuthDataRedux?.accessToken;
       setIsLoadingEdit({
         isLoadingEdit: true,
         isLoadingEditKey: id,
@@ -118,10 +120,11 @@ const Post = () => {
   const handleDeletePost = async (id, newAccessToken) => {
     try {
       let accessToken;
-      if (newAccessToken) {
+      if (newAccessToken?.length) {
         accessToken = newAccessToken;
+      } else {
+        accessToken = getAuthDataRedux?.accessToken;
       }
-      accessToken = getAuthDataRedux?.accessToken;
       setIsLoadingDelete({
         isLoadingDelete: true,
         isLoadingDeleteKey: id,
@@ -166,10 +169,11 @@ const Post = () => {
       if (init) setIsInitialRender(true);
 
       let accessToken;
-      if (newAccessToken) {
+      if (newAccessToken?.length) {
         accessToken = newAccessToken;
+      } else {
+        accessToken = getAuthDataRedux?.accessToken;
       }
-      accessToken = getAuthDataRedux?.accessToken;
 
       const response = await axios.get(
         `${import.meta.env.VITE_BASE_URL}/post`,
@@ -199,7 +203,7 @@ const Post = () => {
       const errMsg = error?.response?.data?.message;
 
       if (errMsg == "Token Expired") {
-        handleRefToken("get");
+        handleRefToken("get", true);
       }
     }
   };
@@ -208,11 +212,11 @@ const Post = () => {
     try {
       setIsLoading(true);
       let accessToken;
-      if (newAccessToken) {
+      if (newAccessToken?.length) {
         accessToken = newAccessToken;
+      } else {
+        accessToken = getAuthDataRedux?.accessToken;
       }
-      accessToken = getAuthDataRedux?.accessToken;
-
       const response = await axios.post(
         `${import.meta.env.VITE_BASE_URL}/post/add`,
         {
@@ -253,10 +257,10 @@ const Post = () => {
       );
       const newAccessToken = response?.data?.data?.getRefreshToken;
 
-      setGetAuthDataRedux((prevAuthData) => ({
-        ...prevAuthData,
-        accessToken: newAccessToken,
-      }));
+      // setGetAuthDataRedux((prevAuthData) => ({
+      //   ...prevAuthData,
+      //   accessToken: newAccessToken,
+      // }));
 
       dispatch(
         authReducer.setAuth({
