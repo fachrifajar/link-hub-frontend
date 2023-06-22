@@ -4,21 +4,36 @@ import { useSelector } from "react-redux";
 import { lighten, darken } from "polished";
 import ButtonTemplate from "../atoms/Button-template";
 
+import EmailIcon from "@mui/icons-material/Email";
+import FacebookIcon from "@mui/icons-material/Facebook";
+import GitHubIcon from "@mui/icons-material/GitHub";
+import InstagramIcon from "@mui/icons-material/Instagram";
+import LinkedInIcon from "@mui/icons-material/LinkedIn";
+import TwitterIcon from "@mui/icons-material/Twitter";
+import WhatsAppIcon from "@mui/icons-material/WhatsApp";
+import YouTubeIcon from "@mui/icons-material/YouTube";
+
+const iconsData = [
+  { Icon: EmailIcon, name: "Email", type: "email" },
+  { Icon: FacebookIcon, name: "Facebook", type: "text" },
+  { Icon: GitHubIcon, name: "GitHub", type: "text" },
+  { Icon: InstagramIcon, name: "Instagram", type: "text" },
+  { Icon: LinkedInIcon, name: "LinkedIn", type: "text" },
+  { Icon: TwitterIcon, name: "Twitter", type: "text" },
+  { Icon: WhatsAppIcon, name: "WhatsApp", type: "number" },
+  { Icon: YouTubeIcon, name: "YouTube", type: "text" },
+];
+
 const PhoneAppearance = () => {
-  // const [getAuthDataRedux, setGetAuthDataRedux] = React.useState(
-  //   useSelector((state) => state?.auth?.data?.data)
-  // );
   const getAuthDataRedux = useSelector((state) => state?.auth?.data?.data);
 
-  const [getPostDataRedux, setGetPostDataRedux] = React.useState(
-    useSelector((state) => state?.post?.data?.data?.item)
+  const getPostDataRedux = useSelector(
+    (state) => state?.post?.data?.data?.item
   );
 
   const getItemDataRedux = useSelector(
     (state) => state?.item?.data?.data?.itemData
   );
-  // console.log(getItemDataRedux);
-  // console.log(getPostDataRedux);
 
   const bgDirection = getPostDataRedux?.bg_direction;
   const bg_dir = bgDirection === "gradientUp" ? "to top" : "to bottom";
@@ -37,9 +52,6 @@ const PhoneAppearance = () => {
   return (
     <Box
       sx={{
-        // width: "120%",
-        // height: "100vh",
-        // bgcolor: "red",
         display: "flex",
         justifyContent: "flex-end",
         alignItems: "center",
@@ -49,9 +61,9 @@ const PhoneAppearance = () => {
           width: "230px",
           height: "60vh",
           ...bgStyle,
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
+          // display: "flex",
+          // justifyContent: "space-between",
+          // alignItems: "center",
           borderColor: "background.default3",
           borderStyle: "solid",
           borderWidth: 10,
@@ -71,13 +83,13 @@ const PhoneAppearance = () => {
         <Stack
           direction="column"
           alignItems="center"
-          justifyContent="flex-start"
+          justifyContent="space-around"
           sx={{
             height: "100%",
             width: "100%",
             p: 2,
           }}>
-          <Avatar sx={{ mb: 1, bgcolor: "#000000", color: "#FFFFFF" }}>
+          <Avatar sx={{ bgcolor: "#000000", color: "#FFFFFF" }}>
             {getAuthDataRedux?.username?.[0].toUpperCase()}
           </Avatar>
           <Typography
@@ -93,43 +105,70 @@ const PhoneAppearance = () => {
             <span>@{getAuthDataRedux?.username}</span>
           </Typography>
 
-          <Box sx={{ width: "100%" }}>
-            {getPostDataRedux?.use_title == "1" && (
-              <Typography
-                variant="body1"
-                sx={{
-                  fontSize: "12px",
-                  // fontWeight: 600,
-                  color: getPostDataRedux?.font_color,
-                  display: "flex",
-                  justifyContent: "center",
-                  mb: "10%",
-                }}>
-                {getPostDataRedux?.title}
-              </Typography>
-            )}
+          {getPostDataRedux?.use_title == "1" && (
+            <Typography
+              variant="body1"
+              sx={{
+                fontSize: "12px",
+                // fontWeight: 600,
+                color: getPostDataRedux?.font_color,
+                display: "flex",
+                justifyContent: "center",
+                mb: "10%",
+              }}>
+              {getPostDataRedux?.title}
+            </Typography>
+          )}
 
-            {getItemDataRedux?.map((item, key) => (
-              <>
-                <ButtonTemplate
-                  key={key}
-                  variant={buttonOption === "fill" ? "contained" : "outlined"}
-                  fullWidth={true}
-                  title={item?.title}
-                  sx={{
-                    bgcolor: getPostDataRedux?.button_color,
-                    color: getPostDataRedux?.button_font_color,
-                    borderRadius: borderRadiusOption,
-                    "&:hover": {
-                      bgcolor: darken(0.1, getPostDataRedux?.button_color),
-                    },
-                    marginTop: "0px",
-                    marginBottom: "5%",
-                    fontSize: "11px",
-                  }}
-                />
-              </>
-            ))}
+          {getItemDataRedux?.map((item, key) => (
+            <>
+              <ButtonTemplate
+                key={key}
+                variant={buttonOption === "fill" ? "contained" : "outlined"}
+                fullWidth={true}
+                title={item?.title}
+                sx={{
+                  bgcolor: getPostDataRedux?.button_color,
+                  color: getPostDataRedux?.button_font_color,
+                  borderRadius: borderRadiusOption,
+                  "&:hover": {
+                    bgcolor: darken(0.1, getPostDataRedux?.button_color),
+                  },
+                  marginTop: "0px",
+                  marginBottom: "5%",
+                  fontSize: "12px",
+                }}
+              />
+            </>
+          ))}
+
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              width: "100%",
+              flexWrap: "wrap",
+            }}>
+            {getPostDataRedux?.SocialMedia?.map((item, index) => {
+              const matchingIcon = iconsData.find(
+                (icon) => icon.name === item.platform
+              );
+              const IconComponent = matchingIcon?.Icon;
+
+              if (!matchingIcon) {
+                return null;
+              }
+
+              return (
+                <>
+                  <IconComponent
+                    key={index}
+                    sx={{ marginY: 1, marginX: 1, cursor: "pointer" }}
+                  />
+                </>
+              );
+            })}
           </Box>
         </Stack>
       </Box>
