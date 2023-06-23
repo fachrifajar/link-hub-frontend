@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Avatar, Typography, Stack } from "@mui/material";
+import { Box, Avatar, Typography, Stack, Link } from "@mui/material";
 import { useSelector } from "react-redux";
 import { lighten, darken } from "polished";
 import ButtonTemplate from "../atoms/Button-template";
@@ -61,14 +61,10 @@ const PhoneAppearance = () => {
           width: "230px",
           height: "60vh",
           ...bgStyle,
-          // display: "flex",
-          // justifyContent: "space-between",
-          // alignItems: "center",
           borderColor: "background.default3",
           borderStyle: "solid",
           borderWidth: 10,
           borderRadius: "25px",
-          // mb: "25%",
           mt: "40%",
           position: "fixed",
           overflow: "auto",
@@ -85,13 +81,33 @@ const PhoneAppearance = () => {
           alignItems="center"
           justifyContent="space-around"
           sx={{
-            height: "100%",
-            width: "100%",
             p: 2,
+            "& img": {
+              height: "40px",
+              width: "40px",
+              borderRadius: "100%",
+              objectFit: "cover",
+            },
           }}>
-          <Avatar sx={{ bgcolor: "#000000", color: "#FFFFFF" }}>
-            {getAuthDataRedux?.username?.[0].toUpperCase()}
-          </Avatar>
+          {getAuthDataRedux?.profile_picture ? (
+            <img
+              src={`${import.meta.env.VITE_CLOUDINARY_URL}${
+                getAuthDataRedux?.profile_picture
+              }`}
+              alt="user-profile_picture"
+            />
+          ) : (
+            <Avatar
+              sx={{
+                bgcolor: "#000000",
+                color: "#FFFFFF",
+                height: "40px",
+                width: "40px",
+              }}>
+              {getAuthDataRedux?.username?.[0].toUpperCase()}
+            </Avatar>
+          )}
+
           <Typography
             variant="body1"
             sx={{
@@ -149,6 +165,7 @@ const PhoneAppearance = () => {
               alignItems: "center",
               width: "100%",
               flexWrap: "wrap",
+              marginTop: "10%",
             }}>
             {getPostDataRedux?.SocialMedia?.map((item, index) => {
               const matchingIcon = iconsData.find(
@@ -162,10 +179,16 @@ const PhoneAppearance = () => {
 
               return (
                 <>
-                  <IconComponent
-                    key={index}
-                    sx={{ marginY: 1, marginX: 1, cursor: "pointer" }}
-                  />
+                  <Link
+                    href={item?.url}
+                    target="_blank"
+                    rel="noopener noreferrer">
+                    <IconComponent
+                      key={index}
+                      color="action"
+                      sx={{ marginX: 1, cursor: "pointer" }}
+                    />
+                  </Link>
                 </>
               );
             })}

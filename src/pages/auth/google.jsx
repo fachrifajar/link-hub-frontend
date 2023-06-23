@@ -94,7 +94,7 @@ const Google = () => {
           },
         }
       );
-      console.log("response=>", response);
+      // console.log("response=>", response);
       const newUsername = response?.data?.data?.username;
 
       dispatch(

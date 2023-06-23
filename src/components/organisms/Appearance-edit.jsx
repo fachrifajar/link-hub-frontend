@@ -1,4 +1,5 @@
 import React from "react";
+import axios from "axios";
 import {
   Avatar,
   Paper,
@@ -18,13 +19,15 @@ import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import YouTubeIcon from "@mui/icons-material/YouTube";
 
 import theme from "../../theme";
-import { useDispatch, useSelector } from "react-redux";
-import { lighten, darken } from "polished";
+import { useSelector, useDispatch } from "react-redux";
+import * as authReducer from "../../store/reducer/auth";
+import { darken } from "polished";
 
 import TextFieldTemplate from "../atoms/Textfield-template";
 import ButtonTemplate from "../atoms/Button-template";
 import ModalAddTemplate from "./Modal-icon-template";
 import ModalIconInteractTemplate from "./Modal-icon-interact-template";
+import ModalProfileTemplate from "./Modal-profile-template";
 
 const iconsData = [
   { Icon: EmailIcon, name: "Email", type: "email" },
@@ -38,6 +41,8 @@ const iconsData = [
 ];
 
 const AppearanceEdit = () => {
+  const dispatch = useDispatch();
+
   const getAuthDataRedux = useSelector((state) => state?.auth?.data?.data);
   const getPostDataRedux = useSelector(
     (state) => state?.post?.data?.data?.item
@@ -46,15 +51,121 @@ const AppearanceEdit = () => {
   const [mode, setMode] = React.useState(
     localStorage.getItem("selectedTheme") || "light"
   );
+  const [isModalProfileOpen, setIsModalProfileOpen] = React.useState(false);
   const [isModalIconOpen, setIsModalIconOpen] = React.useState(false);
   const [isModalEditOpen, setIsModalEditOpen] = React.useState(false);
   const [type, setType] = React.useState("");
   const [title, setTitle] = React.useState("");
   const [getId, setGetId] = React.useState("");
   const [getUrl, setGetUrl] = React.useState("");
+  const [isLoadingDelete, setIsLoadingDelete] = React.useState("");
 
   const color = theme(mode).palette.text.secondary;
   const darkenedColor = darken(0.3, color);
+
+  const handleGetData = async (newAccessToken) => {
+    try {
+      let accessToken;
+      if (newAccessToken?.length) {
+        accessToken = newAccessToken;
+      } else {
+        accessToken = getAuthDataRedux?.accessToken;
+      }
+
+      const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      dispatch(
+        authReducer.setAuth({
+          data: {
+            ...getAuthDataRedux,
+            profile_picture: null,
+          },
+        })
+      );
+      setIsLoadingDelete(false);
+    } catch (error) {
+      setIsLoadingDelete(false);
+      console.log("error-handleGetData", error);
+
+      const errMsg = error?.response?.data?.message;
+
+      if (errMsg === "Token Expired") {
+        handleRefToken("get");
+      }
+    }
+  };
+
+  const handleDeleteData = async (newAccessToken) => {
+    try {
+      setIsLoadingDelete(true);
+      let accessToken;
+      if (newAccessToken?.length) {
+        accessToken = newAccessToken;
+      } else {
+        accessToken = getAuthDataRedux?.accessToken;
+      }
+
+      const response = await axios.patch(
+        `${import.meta.env.VITE_BASE_URL}/images/delete`,
+        {
+          profile_picture: true,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      handleGetData();
+    } catch (error) {
+      console.log("error-handleDeleteData", error);
+
+      const errMsg = error?.response?.data?.message;
+
+      if (errMsg === "Token Expired") {
+        handleRefToken("delete");
+      } else {
+        setIsLoadingDelete(false);
+      }
+    }
+  };
+
+  const handleRefToken = async (fetchType) => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_BASE_URL}/auth/refresh/${getAuthDataRedux?.id}`
+      );
+      const newAccessToken = response?.data?.data?.getRefreshToken;
+
+      dispatch(
+        authReducer.setAuth({
+          data: {
+            ...getAuthDataRedux,
+            accessToken: newAccessToken,
+          },
+        })
+      );
+
+      if (fetchType === "get") {
+        handleGetData(newAccessToken);
+      } else if (fetchType === "delete") {
+        handleDeleteData(newAccessToken);
+      }
+    } catch (error) {
+      setIsLoadingDelete(false);
+      console.log("error-HandleRefToken", error);
+      const errMsg = error?.response?.data?.message;
+
+      if (errMsg === "Token Expired") {
+        console.log("HARUS LOGOUT");
+      }
+    }
+  };
+
   return (
     <>
       <Typography variant="h5" mt={5} fontWeight="bold">
@@ -70,23 +181,52 @@ const AppearanceEdit = () => {
           mt: "1%",
           p: "3%",
         }}>
-        <Stack direction="row" display="flex" alignItems="center">
-          <Avatar
-            sx={{
-              bgcolor: "#000000",
-              color: "#FFFFFF",
+        <Stack
+          direction="row"
+          display="flex"
+          alignItems="center"
+          sx={{
+            "& img": {
               height: { md: "100px", sm: "90px", xs: "80px" },
-              width: { md: "100px", sm: "90px", xs: "80px" },
-              fontSize: "40px",
+              width: { md: "120px", sm: "90px", xs: "80px" },
               mr: 3,
-            }}>
-            {getAuthDataRedux?.username?.[0].toUpperCase()}
-          </Avatar>
+              borderRadius: "100%",
+              objectFit: "cover",
+            },
+          }}>
+          {getAuthDataRedux?.profile_picture ? (
+            <img
+              src={`${import.meta.env.VITE_CLOUDINARY_URL}${
+                getAuthDataRedux?.profile_picture
+              }`}
+              alt="user-profile_picture"
+            />
+          ) : (
+            <Avatar
+              sx={{
+                bgcolor: "#000000",
+                color: "#FFFFFF",
+                height: { md: "100px", sm: "90px", xs: "80px" },
+                width: { md: "100px", sm: "90px", xs: "80px" },
+                fontSize: "40px",
+                mr: 3,
+              }}>
+              {getAuthDataRedux?.username?.[0].toUpperCase()}
+            </Avatar>
+          )}
+
           <Stack width="100%" spacing={{ md: 2, sm: 2, xs: 1 }}>
-            <ButtonTemplate title="Pick an image" sx={{ mt: 0 }} />
+            <ButtonTemplate
+              title="Pick an image"
+              sx={{ mt: 0 }}
+              onClick={() => setIsModalProfileOpen(true)}
+            />
             <ButtonTemplate
               title="Remove"
+              onClick={handleDeleteData}
               variant="outlined"
+              isLoading={isLoadingDelete}
+              disabled={!getAuthDataRedux?.profile_picture}
               sx={{
                 mt: 0,
                 color: "text.secondary",
@@ -199,6 +339,16 @@ const AppearanceEdit = () => {
         title={title}
         id={getId}
         url={getUrl}
+      />
+
+      <ModalProfileTemplate
+        open={isModalProfileOpen}
+        onClose={() => setIsModalProfileOpen(false)}
+        success={(e) => {
+          if (e) {
+            setIsModalProfileOpen(false);
+          }
+        }}
       />
     </>
   );
