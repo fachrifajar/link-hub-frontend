@@ -9,7 +9,7 @@ import NavbarTemplate from "../../components/organisms/Navbar-template";
 import ContainerTemplate from "../../components/atoms/Container-template";
 import TextFieldTemplate from "../../components/atoms/Textfield-template";
 import ButtonTemplate from "../../components/atoms/Button-template";
-import ModalSuccessTemplate from "../../components/organisms/Modal-success-template";
+import ModalSuccessTemplate from "../../components/molecules/Modal-success-template";
 
 import ArrowRightAltIcon from "@mui/icons-material/ArrowRightAlt";
 
@@ -94,7 +94,7 @@ const Google = () => {
           },
         }
       );
-      // console.log("response=>", response);
+
       const newUsername = response?.data?.data?.username;
 
       dispatch(
@@ -227,7 +227,7 @@ const Google = () => {
               helperText={username?.errMsg}
               InputProps={{
                 inputProps: {
-                  maxLength: 25,
+                  maxLength: 20,
                 },
               }}
             />

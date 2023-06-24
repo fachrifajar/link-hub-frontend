@@ -11,7 +11,7 @@ const PaperTemplate = ({ children, sx, title, onClick }) => {
           height: "auto",
           padding: { md: "3%", sm: "3%", xs: "10%" },
           marginTop: "5vh",
-          bgcolor: "background.default",
+          bgcolor: "background.default2",
           borderRadius: "20px",
 
           display: "flex",

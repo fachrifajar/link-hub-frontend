@@ -21,7 +21,7 @@ const MyCard = styled(Card)({
   width: "500px",
 });
 
-const ModalProfileTemplate = ({ open, onClose, success }) => {
+const ModalProfileAppearance = ({ open, onClose, success }) => {
   const dispatch = useDispatch();
 
   const [isDisabled, setIsDisabled] = React.useState(true);
@@ -251,4 +251,4 @@ const ModalProfileTemplate = ({ open, onClose, success }) => {
   );
 };
 
-export default ModalProfileTemplate;
+export default ModalProfileAppearance;

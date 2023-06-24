@@ -14,7 +14,7 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import ButtonTemplate from "../atoms/Button-template";
-import ModalErrorTemplate from "./Modal-error-template";
+import ModalErrorTemplate from "../../components/molecules/Modal-error-template";
 import TextFieldTemplate from "../atoms/Textfield-template";
 import CircularProgressTemplate from "../atoms/CircularProgress-template";
 import CardTemplate from "../atoms/Card-template";
@@ -24,15 +24,12 @@ import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import HighlightAltIcon from "@mui/icons-material/HighlightAlt";
 
-const Post = () => {
+const ContentAdmin = () => {
   document.title = "LinkHub | Post";
   const navigate = useNavigate();
   const isXs = useMediaQuery("(max-width: 600px)");
   const dispatch = useDispatch();
 
-  // const [getAuthDataRedux, setGetAuthDataRedux] = React.useState(
-  //   useSelector((state) => state?.auth?.data?.data)
-  // );
   const getAuthDataRedux = useSelector((state) => state?.auth?.data?.data);
   const [postData, setPostData] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(false);
@@ -42,11 +39,6 @@ const Post = () => {
     value: "",
     key: "",
   });
-
-  // const [color, setColor] = React.useState({
-  //   value: "",
-  //   key: "",
-  // });
 
   const [clickedId, setClickedId] = React.useState("");
   const [isLoadingEdit, setIsLoadingEdit] = React.useState({
@@ -81,7 +73,6 @@ const Post = () => {
         {
           title: title?.value,
           post_id: id,
-          // bg_color: color?.value,
         },
         {
           headers: {
@@ -192,9 +183,6 @@ const Post = () => {
 
       setPostData(sortedPostItems);
 
-      // const initialColors = postItems.map((item) => item?.bg_color);
-      // setColor(initialColors);
-
       if (init) setIsInitialRender(false);
     } catch (error) {
       if (init) setIsInitialRender(false);
@@ -257,11 +245,6 @@ const Post = () => {
       );
       const newAccessToken = response?.data?.data?.getRefreshToken;
 
-      // setGetAuthDataRedux((prevAuthData) => ({
-      //   ...prevAuthData,
-      //   accessToken: newAccessToken,
-      // }));
-
       dispatch(
         authReducer.setAuth({
           data: {
@@ -272,7 +255,7 @@ const Post = () => {
       );
 
       if (fetchType === "get") {
-        handleGetPost(newAccessToken);
+        handleGetPost(newAccessToken, true);
       } else if (fetchType === "post") {
         handleAddPost(newAccessToken);
       } else if (fetchType === "delete") {
@@ -474,4 +457,4 @@ const Post = () => {
   );
 };
 
-export default Post;
+export default ContentAdmin;

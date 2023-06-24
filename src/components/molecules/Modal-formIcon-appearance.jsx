@@ -26,7 +26,7 @@ const MyCard = styled(Card)({
   width: "500px",
 });
 
-const ModalIconInteractTemplate = ({
+const ModalFormIconAppearance = ({
   open,
   onClose,
   type,
@@ -370,4 +370,4 @@ const ModalIconInteractTemplate = ({
   );
 };
 
-export default ModalIconInteractTemplate;
+export default ModalFormIconAppearance;

@@ -16,8 +16,8 @@ const theme = (mode) =>
         contrastText: mode === "light" ? "#125ab8" : "#90caf9",
       },
       background: {
-        default: mode === "light" ? "#fff" : "#0a1929",
-        default2: mode === "light" ? "#f3f3f1" : "#1a2027",
+        default: mode === "light" ? "#f3f3f1" : "#0a1929",
+        default2: mode === "light" ? "#fff" : "#1a2027",
         default3: mode === "light" ? "#1a2027" : "#1a2027",
       },
       custom: {

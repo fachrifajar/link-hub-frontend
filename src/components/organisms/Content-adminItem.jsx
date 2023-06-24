@@ -18,14 +18,14 @@ import CardTemplate from "../atoms/Card-template";
 import ButtonTemplate from "../atoms/Button-template";
 import CircularProgressTemplate from "../atoms/CircularProgress-template";
 import TextFieldTemplate from "../atoms/Textfield-template";
-import ModalErrorTemplate from "./Modal-error-template";
+import ModalErrorTemplate from "../molecules/Modal-error-template";
 
 import DeleteIcon from "@mui/icons-material/Delete";
 import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 
-const DragAndDrop = () => {
+const ContentAdminItem = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const isXs = useMediaQuery("(max-width: 600px)");
@@ -73,8 +73,6 @@ const DragAndDrop = () => {
       handleEditPosition(undefined, newPosition);
 
       setItemData(items);
-
-      // console.log("items-dnd", items);
 
       dispatch(itemReducer.deleteItem());
       dispatch(
@@ -385,7 +383,7 @@ const DragAndDrop = () => {
       );
 
       if (fetchType === "get") {
-        handleGetItem(newAccessToken);
+        handleGetItem(newAccessToken, true);
       } else if (fetchType === "post") {
         handleAddItem(newAccessToken);
       } else if (fetchType === "edit") {
@@ -640,4 +638,4 @@ const DragAndDrop = () => {
   );
 };
 
-export default DragAndDrop;
+export default ContentAdminItem;

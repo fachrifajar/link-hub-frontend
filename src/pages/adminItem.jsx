@@ -4,15 +4,14 @@ import { useNavigate } from "react-router-dom";
 
 import { Grid, Box, Tab, Tabs, useMediaQuery } from "@mui/material";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
-import PhoneAppearance from "../components/organisms/Phone-appearance";
+import PhoneAppearance from "../components/molecules/Phone-appearance";
 import LayersIcon from "@mui/icons-material/Layers";
 import LaunchIcon from "@mui/icons-material/Launch";
 
-
 import NavbarTemplate from "../components/organisms/Navbar-template";
 import ContainerTemplate from "../components/atoms/Container-template";
-import DragAndDrop from "../components/organisms/DragAndADrop-template";
-import AppearanceEdit from "../components/organisms/Appearance-edit";
+import ContentAdminItem from "../components/organisms/Content-adminItem";
+import ContentAppearance from "../components/organisms/Content-appearance";
 
 const AdminItem = () => {
   document.title = "LinkHub | Admin Post";
@@ -72,12 +71,6 @@ const AdminItem = () => {
               icon={<LayersIcon />}
               iconPosition="start"
             />
-            {/* <Tab
-              value="profile"
-              label="Profile"
-              icon={<AccountBoxIcon />}
-              iconPosition="start"
-            /> */}
             <Tab
               value="appearance"
               label="Appearance"
@@ -88,8 +81,8 @@ const AdminItem = () => {
         </Box>
         <Grid container spacing={2} sx={{ paddingX: "5vh" }}>
           <Grid item md={8} sm={12} xs={12}>
-            {value === "item" && <DragAndDrop />}
-            {value === "appearance" && <AppearanceEdit />}
+            {value === "item" && <ContentAdminItem />}
+            {value === "appearance" && <ContentAppearance />}
           </Grid>
           <Grid
             item

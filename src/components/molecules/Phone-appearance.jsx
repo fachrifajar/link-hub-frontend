@@ -57,6 +57,7 @@ const PhoneAppearance = () => {
         alignItems: "center",
       }}>
       <Box
+        display="flex"
         sx={{
           width: "230px",
           height: "60vh",
@@ -68,6 +69,7 @@ const PhoneAppearance = () => {
           mt: "40%",
           position: "fixed",
           overflow: "auto",
+
           "&::-webkit-scrollbar": {
             width: "0.1em",
             height: "0.5em",
@@ -77,11 +79,14 @@ const PhoneAppearance = () => {
           },
         }}>
         <Stack
+          display="flex"
           direction="column"
           alignItems="center"
-          justifyContent="space-around"
+          justifyContent="space-between"
           sx={{
             p: 2,
+            flex: 1,
+            width: "100%",
             "& img": {
               height: "40px",
               width: "40px",
@@ -89,74 +94,107 @@ const PhoneAppearance = () => {
               objectFit: "cover",
             },
           }}>
-          {getAuthDataRedux?.profile_picture ? (
-            <img
-              src={`${import.meta.env.VITE_CLOUDINARY_URL}${
-                getAuthDataRedux?.profile_picture
-              }`}
-              alt="user-profile_picture"
-            />
-          ) : (
-            <Avatar
-              sx={{
-                bgcolor: "#000000",
-                color: "#FFFFFF",
-                height: "40px",
-                width: "40px",
-              }}>
-              {getAuthDataRedux?.username?.[0].toUpperCase()}
-            </Avatar>
-          )}
+          <Box>
+            {getAuthDataRedux?.profile_picture ? (
+              <Box sx={{ display: "flex", justifyContent: "center" }}>
+                <img
+                  src={`${import.meta.env.VITE_CLOUDINARY_URL}${
+                    getAuthDataRedux?.profile_picture
+                  }`}
+                  alt="user-profile_picture"
+                />
+              </Box>
+            ) : (
+              <Box sx={{ display: "flex", justifyContent: "center" }}>
+                <Avatar
+                  sx={{
+                    bgcolor: "#000000",
+                    color: "#FFFFFF",
+                    height: "40px",
+                    width: "40px",
+                  }}>
+                  {getAuthDataRedux?.username?.[0].toUpperCase()}
+                </Avatar>
+              </Box>
+            )}
 
-          <Typography
-            variant="body1"
-            sx={{
-              fontSize: "14px",
-              fontWeight: 600,
-              color: getPostDataRedux?.font_color,
-              "& span": {
-                letterSpacing: 1,
-              },
-            }}>
-            <span>@{getAuthDataRedux?.username}</span>
-          </Typography>
-
-          {getPostDataRedux?.use_title == "1" && (
             <Typography
               variant="body1"
+              component="div"
               sx={{
-                fontSize: "12px",
-                // fontWeight: 600,
-                color: getPostDataRedux?.font_color,
                 display: "flex",
                 justifyContent: "center",
-                mb: "10%",
+                fontSize: "14px",
+                fontWeight: 600,
+                color: getPostDataRedux?.font_color,
+                mb: getPostDataRedux?.use_title == false && "10%",
+                "& span": {
+                  letterSpacing: 1,
+                },
               }}>
-              {getPostDataRedux?.title}
+              <span>@{getAuthDataRedux?.username}</span>
             </Typography>
-          )}
-
-          {getItemDataRedux?.map((item, key) => (
-            <>
-              <ButtonTemplate
-                key={key}
-                variant={buttonOption === "fill" ? "contained" : "outlined"}
-                fullWidth={true}
-                title={item?.title}
+            {getPostDataRedux?.use_title == true && (
+              <Typography
+                variant="body1"
                 sx={{
-                  bgcolor: getPostDataRedux?.button_color,
-                  color: getPostDataRedux?.button_font_color,
-                  borderRadius: borderRadiusOption,
-                  "&:hover": {
-                    bgcolor: darken(0.1, getPostDataRedux?.button_color),
-                  },
-                  marginTop: "0px",
-                  marginBottom: "5%",
                   fontSize: "12px",
-                }}
-              />
-            </>
-          ))}
+                  color: getPostDataRedux?.font_color,
+                  display: "flex",
+                  justifyContent: "center",
+                  mb: "10%",
+                }}>
+                {getPostDataRedux?.title}
+              </Typography>
+            )}
+
+            {getItemDataRedux?.map((item, key) => (
+              <>
+                <ButtonTemplate
+                  key={key}
+                  variant={buttonOption === "fill" ? "contained" : "outlined"}
+                  fullWidth={true}
+                  title={item?.title}
+                  sx={{
+                    bgcolor: getPostDataRedux?.button_color,
+                    color: getPostDataRedux?.button_font_color,
+                    borderRadius: borderRadiusOption,
+                    "&:hover": {
+                      bgcolor: darken(0.1, getPostDataRedux?.button_color),
+                    },
+                    marginTop: "0px",
+                    marginBottom: "5%",
+                    fontSize: "12px",
+                    width: "180px",
+                  }}
+                />
+              </>
+            ))}
+          </Box>
+
+          {/* <Box sx={{ width: "100%", alignItems: "flex-start" }}>
+            {getItemDataRedux?.map((item, key) => (
+              <>
+                <ButtonTemplate
+                  key={key}
+                  variant={buttonOption === "fill" ? "contained" : "outlined"}
+                  fullWidth={true}
+                  title={item?.title}
+                  sx={{
+                    bgcolor: getPostDataRedux?.button_color,
+                    color: getPostDataRedux?.button_font_color,
+                    borderRadius: borderRadiusOption,
+                    "&:hover": {
+                      bgcolor: darken(0.1, getPostDataRedux?.button_color),
+                    },
+                    marginTop: "0px",
+                    marginBottom: "5%",
+                    fontSize: "12px",
+                  }}
+                />
+              </>
+            ))}
+          </Box> */}
 
           <Box
             sx={{
@@ -186,7 +224,13 @@ const PhoneAppearance = () => {
                     <IconComponent
                       key={index}
                       color="action"
-                      sx={{ marginX: 1, cursor: "pointer" }}
+                      sx={{
+                        marginX: 1,
+                        cursor: "pointer",
+                        "&:hover": {
+                          color: "gray",
+                        },
+                      }}
                     />
                   </Link>
                 </>

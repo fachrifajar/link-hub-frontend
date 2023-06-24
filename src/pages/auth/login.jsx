@@ -19,8 +19,8 @@ import ButtonTemplate from "../../components/atoms/Button-template";
 import TextFieldTemplate from "../../components/atoms/Textfield-template";
 import PaperTemplate from "../../components/atoms/Paper-template";
 import NavbarTemplate from "../../components/organisms/Navbar-template";
-import ModalErrorTemplate from "../../components/organisms/Modal-error-template";
-import ModalSuccessTemplate from "../../components/organisms/Modal-success-template";
+import ModalErrorTemplate from "../../components/molecules/Modal-error-template";
+import ModalSuccessTemplate from "../../components/molecules/Modal-success-template";
 
 import {
   signInWithPopup,
@@ -135,7 +135,7 @@ const Login = () => {
       console.log(response);
       setAuthData(response?.data?.data);
 
-      const getAuthData = response?.data?.data
+      const getAuthData = response?.data?.data;
 
       firebaseAuth(getAuthData);
     } catch (error) {

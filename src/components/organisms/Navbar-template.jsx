@@ -4,7 +4,7 @@ import {
   Stack,
   Typography,
   useMediaQuery,
-
+  Box,
 } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import * as authReducer from "../../store/reducer/auth";
@@ -15,7 +15,7 @@ import theme from "../../theme";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import ButtonTemplate from "../atoms/Button-template";
-import DrawerTemplate from "./Drawer-template";
+import DrawerTemplate from "../atoms/Drawer-template";
 
 const MaterialUISwitch = styled(Switch)(({ theme }) => ({
   width: 62,
@@ -100,31 +100,42 @@ const NavbarTemplate = ({ _setTheme, getTheme, getAuthDataRedux, sx }) => {
           alignItems="center"
           justifyContent="space-between"
           m={2}
-          sx={{ ...sx }}>
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{
-              fontFamily: "monospace",
-              fontWeight: 700,
-              letterSpacing: ".3rem",
-              textDecoration: "none",
-              color: "text.primary",
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-between",
-              "& span": {
-                color: "white",
+          sx={{
+            bgcolor: "background.default2",
+            padding: 1.5,
+            marginTop: "10px",
+            borderRadius: "100px",
+            ...sx,
+          }}>
+          <Box>
+            <Typography
+              variant="h6"
+              noWrap
+              component="div"
+              sx={{
                 fontFamily: "monospace",
-                borderRadius: "5px",
-                paddingLeft: "5px",
-                bgcolor: "primary.main",
-              },
-            }}>
-            Link
-            <span>Hub</span>
-          </Typography>
+                fontWeight: 700,
+                letterSpacing: ".3rem",
+                textDecoration: "none",
+                color: "text.primary",
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                marginLeft: 1,
+                "& span": {
+                  color: "white",
+                  fontFamily: "monospace",
+                  borderRadius: "5px",
+                  paddingLeft: "5px",
+                  bgcolor: "primary.main",
+                },
+              }}>
+              Link
+              <span>Hub</span>
+            </Typography>
+
+            
+          </Box>
 
           {!isXs && (
             <Stack

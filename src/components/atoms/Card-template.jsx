@@ -7,7 +7,7 @@ const CardTemplate = ({ sx, children, icon, onClick }) => {
       sx={{
         width: { md: "60%", sm: "60%", xs: "100%" },
         marginBottom: !isXs ? "1%" : "3%",
-        borderRadius: "10px",
+        borderRadius: "20px",
         bgcolor: "background.default2",
         display: "flex",
         flexDirection: isXs ? "column" : "row",

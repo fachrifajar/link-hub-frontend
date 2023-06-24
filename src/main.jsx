@@ -14,7 +14,7 @@ import Register from "./pages/auth/register";
 import Login from "./pages/auth/login";
 import Google from "./pages/auth/google";
 import Admin from "./pages/admin";
-import AdminItem from "./pages/admin-item";
+import AdminItem from "./pages/adminItem";
 
 const router = createBrowserRouter([
   // {

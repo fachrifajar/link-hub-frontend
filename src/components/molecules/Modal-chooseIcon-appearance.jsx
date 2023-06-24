@@ -19,7 +19,7 @@ import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import YouTubeIcon from "@mui/icons-material/YouTube";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 
-import ModalIconInteractTemplate from "./Modal-icon-interact-template";
+import ModalFormIconAppearance from "./Modal-formIcon-appearance";
 
 const MyModal = styled(Modal)({
   display: "flex",
@@ -46,7 +46,7 @@ const iconsData = [
   { Icon: YouTubeIcon, name: "YouTube", type: "text" },
 ];
 
-const ModalIconTemplate = ({
+const ModalChooseIcon = ({
   open,
   onClose,
   text,
@@ -114,7 +114,7 @@ const ModalIconTemplate = ({
           </Box>
         </MyCard>
       </MyModal>
-      <ModalIconInteractTemplate
+      <ModalFormIconAppearance
         interactType="Add"
         open={isModalOpen}
         onClose={() => setIsModalopen(false)}
@@ -132,4 +132,4 @@ const ModalIconTemplate = ({
   );
 };
 
-export default ModalIconTemplate;
+export default ModalChooseIcon;

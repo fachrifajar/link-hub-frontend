@@ -2,14 +2,9 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-import { Grid, Box, Typography, Tab, Tabs } from "@mui/material";
-import AccountBoxIcon from "@mui/icons-material/AccountBox";
-import AutoAwesomeMotionIcon from "@mui/icons-material/AutoAwesomeMotion";
-import LaunchIcon from "@mui/icons-material/Launch";
 import NavbarTemplate from "../components/organisms/Navbar-template";
 import ContainerTemplate from "../components/atoms/Container-template";
-import Post from "../components/organisms/Post";
-import PhoneAppearance from "../components/organisms/Phone-appearance";
+import ContentAdmin from "../components/organisms/Content-admin";
 
 const Admin = () => {
   document.title = "LinkHub | Admin";
@@ -36,7 +31,7 @@ const Admin = () => {
       <NavbarTemplate _setTheme={mode} getTheme={(e) => setMode(e)} />
 
       <ContainerTemplate _setTheme={mode}>
-        <Post />
+        <ContentAdmin />
       </ContainerTemplate>
     </>
   );

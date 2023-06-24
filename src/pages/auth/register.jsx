@@ -21,8 +21,8 @@ import ContainerTemplate from "../../components/atoms/Container-template";
 import TextFieldTemplate from "../../components/atoms/Textfield-template";
 import ButtonTemplate from "../../components/atoms/Button-template";
 import PaperTemplate from "../../components/atoms/Paper-template";
-import ModalErrorTemplate from "../../components/organisms/Modal-error-template";
-import ModalSuccessTemplate from "../../components/organisms/Modal-success-template";
+import ModalErrorTemplate from "../../components/molecules/Modal-error-template";
+import ModalSuccessTemplate from "../../components/molecules/Modal-success-template";
 
 import {
   createUserWithEmailAndPassword,
