@@ -18,6 +18,7 @@ import ModalFormIconAppearance from "../molecules/Modal-formIcon-appearance";
 
 import BackgroundAppearance from "../molecules/Background-appearance";
 import ProfileAppearance from "../molecules/Profile-appearance";
+import ButtonAppearance from "../molecules/Button-appearance";
 
 const iconsData = [
   { Icon: EmailIcon, name: "Email", type: "email" },
@@ -31,7 +32,6 @@ const iconsData = [
 ];
 
 const ContentAppearance = () => {
-  const getAuthDataRedux = useSelector((state) => state?.auth?.data?.data);
   const getPostDataRedux = useSelector(
     (state) => state?.post?.data?.data?.item
   );
@@ -45,19 +45,6 @@ const ContentAppearance = () => {
   const [title, setTitle] = React.useState("");
   const [getId, setGetId] = React.useState("");
   const [getUrl, setGetUrl] = React.useState("");
-
-  const [buttonColor, setButtonColor] = React.useState(
-    getPostDataRedux?.button_color
-  );
-  const [buttonFontColor, setButtonFontColor] = React.useState(
-    getPostDataRedux?.button_font_color
-  );
-  const [buttonOption, setButtonOption] = React.useState(
-    getPostDataRedux?.button_option
-  );
-  const [fontColor, setFontColor] = React.useState(
-    getPostDataRedux?.font_color
-  );
 
   return (
     <>
@@ -137,6 +124,8 @@ const ContentAppearance = () => {
       </Paper>
 
       <BackgroundAppearance />
+
+      <ButtonAppearance />
 
       <ModalChooseIcon
         open={isModalIconOpen}

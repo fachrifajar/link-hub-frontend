@@ -25,6 +25,10 @@ const BackgroundAppearance = () => {
     (state) => state?.post?.data?.data?.item
   );
 
+  const [getBg, setGetBg] = React.useState("");
+  const [getBg_color, setGetBg_color] = React.useState("");
+  const [getBg_direction, setGetBg_direction] = React.useState("");
+
   const handleEditStyle = async (newAccessToken, value, key) => {
     try {
       let accessToken;
@@ -55,9 +59,18 @@ const BackgroundAppearance = () => {
           requestBody.bg_direction = value;
           updatedPostItem.bg_direction = value;
         }
+      } else {
+        if (getBg) {
+          requestBody.bg = getBg;
+          updatedPostItem.bg = getBg;
+        } else if (getBg_color) {
+          requestBody.bg_color = getBg_color;
+          updatedPostItem.bg_color = getBg_color;
+        } else if (getBg_direction) {
+          requestBody.bg_direction = getBg_direction;
+          updatedPostItem.bg_direction = getBg_direction;
+        }
       }
-
-      console.log("requestBody", requestBody);
 
       const response = await axios.patch(
         `${import.meta.env.VITE_BASE_URL}/post/edit`,
@@ -84,14 +97,14 @@ const BackgroundAppearance = () => {
       const errMsg = error?.response?.data?.message;
 
       if (errMsg === "Token Expired") {
-        handleRefToken("patch");
+        handleRefToken(value, key);
       }
     }
   };
 
   const debouncedHandleEditStyle = debounce(handleEditStyle, 300);
 
-  const handleRefToken = async (fetchType) => {
+  const handleRefToken = async (value, key) => {
     try {
       const response = await axios.get(
         `${import.meta.env.VITE_BASE_URL}/auth/refresh/${getAuthDataRedux?.id}`
@@ -107,7 +120,7 @@ const BackgroundAppearance = () => {
         })
       );
 
-      handleEditStyle(newAccessToken);
+      handleEditStyle(newAccessToken, value, key);
     } catch (error) {
       setIsLoadingDelete(false);
       console.log("error-HandleRefToken", error);
@@ -138,6 +151,7 @@ const BackgroundAppearance = () => {
         <Box display="flex" direction="row" justifyContent="space-evenly">
           <Box
             onClick={() => {
+              setGetBg("flat");
               handleEditStyle(undefined, "flat", "bg");
             }}
             sx={{
@@ -179,6 +193,7 @@ const BackgroundAppearance = () => {
 
           <Box
             onClick={() => {
+              setGetBg("gradient");
               handleEditStyle(undefined, "gradient", "bg");
             }}
             sx={{
@@ -238,6 +253,7 @@ const BackgroundAppearance = () => {
               defaultChecked={getPostDataRedux?.bg_direction}
               control={<Radio />}
               onClick={(e) => {
+                setGetBg_direction(e.target.value);
                 handleEditStyle(undefined, e.target.value, "bg_direction");
               }}
               label={
@@ -262,6 +278,7 @@ const BackgroundAppearance = () => {
               defaultChecked={getPostDataRedux?.bg_direction}
               control={<Radio />}
               onClick={(e) => {
+                setGetBg_direction(e.target.value);
                 handleEditStyle(undefined, e.target.value, "bg_direction");
               }}
               label={
@@ -291,6 +308,7 @@ const BackgroundAppearance = () => {
           value={getPostDataRedux?.bg_color}
           defaultValue={getPostDataRedux?.bg_color}
           onChange={(e) => {
+            setGetBg_color(e.target.value);
             debouncedHandleEditStyle(undefined, e.target.value, "bg_color");
           }}
           type="color"
@@ -311,7 +329,7 @@ const BackgroundAppearance = () => {
             ),
           }}
           sx={{
-            width: { md: "25%", sm: "25%", xs: "70%" },
+            width: { md: "50%", sm: "50%", xs: "70%" },
             display: "flex",
             justifyContent: "center",
           }}

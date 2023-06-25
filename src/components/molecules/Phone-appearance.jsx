@@ -38,6 +38,9 @@ const PhoneAppearance = () => {
   const bgDirection = getPostDataRedux?.bg_direction;
   const bg_dir = bgDirection === "gradientUp" ? "to top" : "to bottom";
 
+  const fontColor = getPostDataRedux?.font_color;
+  const darkenFontColor = darken(0.1, fontColor);
+
   const hexColor = getPostDataRedux?.bg_color;
   const lightenedColor = lighten(0.3, hexColor);
   const gradientStyle = {
@@ -126,7 +129,7 @@ const PhoneAppearance = () => {
                 justifyContent: "center",
                 fontSize: "14px",
                 fontWeight: 600,
-                color: getPostDataRedux?.font_color,
+                color: fontColor,
                 mb: getPostDataRedux?.use_title == false && "10%",
                 "& span": {
                   letterSpacing: 1,
@@ -139,7 +142,7 @@ const PhoneAppearance = () => {
                 variant="body1"
                 sx={{
                   fontSize: "12px",
-                  color: getPostDataRedux?.font_color,
+                  color: fontColor,
                   display: "flex",
                   justifyContent: "center",
                   mb: "10%",
@@ -156,7 +159,10 @@ const PhoneAppearance = () => {
                   fullWidth={true}
                   title={item?.title}
                   sx={{
-                    bgcolor: getPostDataRedux?.button_color,
+                    bgcolor:
+                      buttonOption === "fill"
+                        ? getPostDataRedux?.button_color
+                        : "none",
                     color: getPostDataRedux?.button_font_color,
                     borderRadius: borderRadiusOption,
                     "&:hover": {
@@ -171,30 +177,6 @@ const PhoneAppearance = () => {
               </>
             ))}
           </Box>
-
-          {/* <Box sx={{ width: "100%", alignItems: "flex-start" }}>
-            {getItemDataRedux?.map((item, key) => (
-              <>
-                <ButtonTemplate
-                  key={key}
-                  variant={buttonOption === "fill" ? "contained" : "outlined"}
-                  fullWidth={true}
-                  title={item?.title}
-                  sx={{
-                    bgcolor: getPostDataRedux?.button_color,
-                    color: getPostDataRedux?.button_font_color,
-                    borderRadius: borderRadiusOption,
-                    "&:hover": {
-                      bgcolor: darken(0.1, getPostDataRedux?.button_color),
-                    },
-                    marginTop: "0px",
-                    marginBottom: "5%",
-                    fontSize: "12px",
-                  }}
-                />
-              </>
-            ))}
-          </Box> */}
 
           <Box
             sx={{
@@ -223,12 +205,13 @@ const PhoneAppearance = () => {
                     rel="noopener noreferrer">
                     <IconComponent
                       key={index}
-                      color="action"
+                      // color="action"
                       sx={{
+                        color: fontColor,
                         marginX: 1,
                         cursor: "pointer",
                         "&:hover": {
-                          color: "gray",
+                          color: darkenFontColor,
                         },
                       }}
                     />
