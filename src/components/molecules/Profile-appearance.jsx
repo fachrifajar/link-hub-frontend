@@ -18,6 +18,7 @@ import theme from "../../theme";
 import TextFieldTemplate from "../atoms/Textfield-template";
 import ButtonTemplate from "../atoms/Button-template";
 import ModalProfileAppearance from "../molecules/Modal-profile-appearance";
+import ModalErrorTemplate from "./Modal-error-template";
 
 const ProfileAppearance = () => {
   const dispatch = useDispatch();
@@ -33,6 +34,10 @@ const ProfileAppearance = () => {
   );
   //modal
   const [isModalProfileOpen, setIsModalProfileOpen] = React.useState(false);
+  const [isModalErrOpen, setIsModalErrOpen] = React.useState({
+    isErr: false,
+    errMsg: "",
+  });
 
   //edit profile
   const [editTitle, setEditTitle] = React.useState("");
@@ -84,7 +89,6 @@ const ProfileAppearance = () => {
       }));
     }
   };
-
 
   const handleEditProfile = async (newAccessToken) => {
     try {
@@ -155,6 +159,11 @@ const ProfileAppearance = () => {
         handleRefToken("edit");
       } else {
         setIsLoadingEdit(false);
+        setIsModalErrOpen((prevValue) => ({
+          ...prevValue,
+          isErr: true,
+          errMsg,
+        }));
       }
     }
   };
@@ -238,7 +247,7 @@ const ProfileAppearance = () => {
       } else {
         accessToken = getAuthDataRedux?.accessToken;
       }
- 
+
       const response = await axios.patch(
         `${import.meta.env.VITE_BASE_URL}/post/edit`,
         {
@@ -251,7 +260,7 @@ const ProfileAppearance = () => {
           },
         }
       );
-   
+
       dispatch(
         postReducer.setPost({
           data: {
@@ -328,7 +337,7 @@ const ProfileAppearance = () => {
           bgcolor: "background.default2",
           borderRadius: "20px",
           mt: "1%",
-          p: "3%",
+          p: { md: "3%", sm: "3%", xs: "5%" },
         }}>
         <Stack
           direction="row"
@@ -447,6 +456,17 @@ const ProfileAppearance = () => {
             setIsModalProfileOpen(false);
           }
         }}
+      />
+
+      <ModalErrorTemplate
+        open={isModalErrOpen?.isErr}
+        onClose={() => {
+          setIsModalErrOpen((prevValue) => ({
+            ...prevValue,
+            isErr: false,
+          }));
+        }}
+        text={isModalErrOpen?.errMsg}
       />
     </>
   );

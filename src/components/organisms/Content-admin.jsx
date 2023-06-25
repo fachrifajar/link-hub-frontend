@@ -293,7 +293,7 @@ const ContentAdmin = () => {
           onClick={handleAddPost}
           startIcon={<AddIcon />}
           sx={{
-            width: { md: "60%", sm: "60%", xs: "100%" },
+            width: { md: "70%", sm: "70%", xs: "100%" },
             fontSize: { md: "18px", sm: "18px", xs: "16px" },
             marginBottom: "5%",
           }}
@@ -326,7 +326,8 @@ const ContentAdmin = () => {
                       })
                     );
                     navigate(`/admin/post/${item?.id}`);
-                  }}>
+                  }}
+                  sx={{ width: { md: "70%", sm: "70%", xs: "100%" } }}>
                   <Stack
                     sx={{
                       display: "flex",
@@ -393,7 +394,12 @@ const ContentAdmin = () => {
                       display: "flex",
                       alignItems: "flex-end",
                       justifyContent: "space-between",
-                      flexDirection: isXs ? "row-reverse" : "column",
+                      // flexDirection: isXs ? "row-reverse" : "column",
+                      flexDirection: {
+                        md: "column",
+                        sm: "row-reverse",
+                        xs: "row-reverse",
+                      },
                       mt: isXs ? 2 : 0,
                     }}>
                     <ButtonTemplate
@@ -410,7 +416,7 @@ const ContentAdmin = () => {
                       }}
                       sx={{
                         marginTop: 0,
-                        width: "100px",
+                        width: {md: "100%", sm: "40%", xs: "40%"},
                       }}
                     />
                     <ButtonTemplate
@@ -428,7 +434,7 @@ const ContentAdmin = () => {
                       startIcon={<DeleteIcon />}
                       sx={{
                         marginTop: 0,
-                        width: "100px",
+                        width: {md: "100%", sm: "40%", xs: "40%"},
                       }}
                     />
                   </Stack>

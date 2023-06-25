@@ -145,7 +145,7 @@ const BackgroundAppearance = () => {
           bgcolor: "background.default2",
           borderRadius: "20px",
           mt: "1%",
-          p: "3%",
+          p: { md: "3%", sm: "3%", xs: "5%" },
           marginBottom: "5%",
         }}>
         <Box display="flex" direction="row" justifyContent="space-evenly">

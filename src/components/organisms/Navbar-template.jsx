@@ -5,10 +5,11 @@ import {
   Typography,
   useMediaQuery,
   Box,
+  CardActionArea,
 } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import * as authReducer from "../../store/reducer/auth";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 import React from "react";
 import theme from "../../theme";
@@ -16,6 +17,10 @@ import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import ButtonTemplate from "../atoms/Button-template";
 import DrawerTemplate from "../atoms/Drawer-template";
+
+import TocIcon from "@mui/icons-material/Toc";
+import LayersIcon from "@mui/icons-material/Layers";
+import LaunchIcon from "@mui/icons-material/Launch";
 
 const MaterialUISwitch = styled(Switch)(({ theme }) => ({
   width: 62,
@@ -69,10 +74,18 @@ const NavbarTemplate = ({ _setTheme, getTheme, getAuthDataRedux, sx }) => {
   const isXs = useMediaQuery("(max-width: 600px)");
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [mode, setMode] = React.useState("light");
+  const getPostDataRedux = useSelector(
+    (state) => state?.post?.data?.data?.item
+  );
+
   const [authDataRedux, setAuthDataRedux] = React.useState(
     useSelector((state) => state?.auth?.data?.data)
+  );
+  const [checkPath, setCheckPath] = React.useState(
+    location.pathname.split("/")[2]
   );
 
   const handleSwitchChange = () => {
@@ -91,6 +104,7 @@ const NavbarTemplate = ({ _setTheme, getTheme, getAuthDataRedux, sx }) => {
       getAuthDataRedux(authDataRedux);
     }
   }, [authDataRedux, getAuthDataRedux]);
+
   return (
     <>
       <ThemeProvider theme={setTheme}>
@@ -99,15 +113,24 @@ const NavbarTemplate = ({ _setTheme, getTheme, getAuthDataRedux, sx }) => {
           direction="row"
           alignItems="center"
           justifyContent="space-between"
-          m={2}
+          m={!isXs && 2}
           sx={{
             bgcolor: "background.default2",
             padding: 1.5,
-            marginTop: "10px",
-            borderRadius: "100px",
+            marginTop: !isXs && "10px",
+            borderRadius: !isXs && "100px",
             ...sx,
           }}>
-          <Box>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              flexDirection: "row",
+              "& img": {
+                width: "20px",
+                height: "20px",
+              },
+            }}>
             <Typography
               variant="h6"
               noWrap
@@ -134,7 +157,57 @@ const NavbarTemplate = ({ _setTheme, getTheme, getAuthDataRedux, sx }) => {
               <span>Hub</span>
             </Typography>
 
-            
+            {!isXs && checkPath !== undefined && (
+              <Stack
+                direction="row"
+                alignItems="center"
+                justifyContent="space-between"
+                ml={2}
+                spacing={2}>
+                <CardActionArea
+                  onClick={() => navigate("/admin")}
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    flexDirection: "row",
+                    color: checkPath === "admin" ? "inherit" : "gray",
+                  }}>
+                  <TocIcon sx={{ mr: 1 }} />
+                  <Typography variant="body1">Post</Typography>
+                </CardActionArea>
+
+                <CardActionArea
+                  onClick={() =>
+                    navigate(`/admin/post/${getPostDataRedux?.id}`)
+                  }
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    flexDirection: "row",
+                    color: checkPath === "post" ? "inherit" : "gray",
+                  }}>
+                  <LayersIcon sx={{ mr: 1 }} />
+                  <Typography variant="body1">Item</Typography>
+                </CardActionArea>
+
+                <CardActionArea
+                  onClick={() =>
+                    navigate(`/admin/appearance/${getPostDataRedux?.id}`)
+                  }
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    flexDirection: "row",
+                    color: checkPath === "appearance" ? "inherit" : "gray",
+                  }}>
+                  <LaunchIcon sx={{ mr: 1 }} />
+                  <Typography variant="body1">Appearance</Typography>
+                </CardActionArea>
+              </Stack>
+            )}
           </Box>
 
           {!isXs && (
@@ -143,15 +216,6 @@ const NavbarTemplate = ({ _setTheme, getTheme, getAuthDataRedux, sx }) => {
               spacing={2}
               alignItems="center"
               sx={{ alignItems: "center" }}>
-              {/* {authDataRedux && (
-                <ButtonTemplate
-                  title="Admin"
-                  sx={{
-                    marginTop: 0,
-                    borderRadius: "5px",
-                  }}
-                />
-              )} */}
               {authDataRedux && (
                 <ButtonTemplate
                   color="secondary"
@@ -167,15 +231,72 @@ const NavbarTemplate = ({ _setTheme, getTheme, getAuthDataRedux, sx }) => {
               <MaterialUISwitch onChange={handleSwitchChange} />
             </Stack>
           )}
+
           {isXs && (
             <DrawerTemplate
               _getAuthDataRedux={authDataRedux}
-              onClick_profile={() => navigate("/admin")}
+              // onClick_profile={() => navigate("/admin")}
               onClick_logout={handleLogout}>
               <MaterialUISwitch onChange={handleSwitchChange} />
             </DrawerTemplate>
           )}
         </Stack>
+
+        {isXs && checkPath !== undefined && (
+          <Stack
+            direction="row"
+            alignItems="center"
+            justifyContent="space-around"
+            m={2}
+            spacing={1}
+            sx={{
+              bgcolor: "background.default2",
+              padding: 1.5,
+              marginTop: "10px",
+              borderRadius: "100px",
+            }}>
+            <CardActionArea
+              onClick={() => navigate("/admin")}
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                flexDirection: "row",
+                color: checkPath === "admin" ? "inherit" : "gray",
+              }}>
+              <TocIcon sx={{ mr: 1 }} />
+              <Typography variant="body1">Post</Typography>
+            </CardActionArea>
+
+            <CardActionArea
+              onClick={() => navigate(`/admin/post/${getPostDataRedux?.id}`)}
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                flexDirection: "row",
+                color: checkPath === "post" ? "inherit" : "gray",
+              }}>
+              <LayersIcon sx={{ mr: 1 }} />
+              <Typography variant="body1">Item</Typography>
+            </CardActionArea>
+
+            <CardActionArea
+              onClick={() =>
+                navigate(`/admin/appearance/${getPostDataRedux?.id}`)
+              }
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                flexDirection: "row",
+                color: checkPath === "appearance" ? "inherit" : "gray",
+              }}>
+              <LaunchIcon sx={{ mr: 1 }} />
+              <Typography variant="body1">Appearance</Typography>
+            </CardActionArea>
+          </Stack>
+        )}
       </ThemeProvider>
     </>
   );

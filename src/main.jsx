@@ -15,6 +15,7 @@ import Login from "./pages/auth/login";
 import Google from "./pages/auth/google";
 import Admin from "./pages/admin";
 import AdminItem from "./pages/adminItem";
+import Appearance from "./pages/appearance";
 
 const router = createBrowserRouter([
   // {
@@ -57,6 +58,10 @@ const router = createBrowserRouter([
   {
     path: "/admin/post/:id",
     element: <AdminItem />,
+  },
+  {
+    path: "/admin/appearance/:id",
+    element: <Appearance />,
   },
 ]);
 

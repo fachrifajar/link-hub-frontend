@@ -42,7 +42,7 @@ const NavbarTemplate = ({
       onKeyDown={toggleDrawer(anchor, false)}>
       {_getAuthDataRedux && (
         <>
-          <List onClick={onClick_profile}>
+          {/* <List onClick={onClick_profile}>
             <ListItem disablePadding>
               <ListItemButton>
                 <ListItemIcon>
@@ -51,7 +51,7 @@ const NavbarTemplate = ({
                 <ListItemText>Admin</ListItemText>
               </ListItemButton>
             </ListItem>
-          </List>
+          </List> */}
 
           <List onClick={onClick_logout}>
             <ListItem disablePadding>

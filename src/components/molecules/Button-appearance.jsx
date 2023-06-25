@@ -99,7 +99,6 @@ const ButtonAppearance = () => {
         }
       );
 
-      console.log("response-handleEditStyle", response);
 
       dispatch(
         postReducer.setPost({
@@ -152,7 +151,7 @@ const ButtonAppearance = () => {
   return (
     <>
       <Typography variant="h5" mt={3} fontWeight="bold">
-        Buttons
+        Buttons & Colors
       </Typography>
       <Paper
         elevation={0}
@@ -162,7 +161,7 @@ const ButtonAppearance = () => {
           bgcolor: "background.default2",
           borderRadius: "20px",
           mt: "1%",
-          p: "3%",
+          p: { md: "3%", sm: "3%", xs: "5%" },
           marginBottom: "5%",
         }}>
         <Typography variant="body1" fontWeight="bold" marginBottom={2}>
@@ -183,7 +182,13 @@ const ButtonAppearance = () => {
                 handleEditStyle(undefined, e.target.value, "button_option");
               }}
               label={
-                <Box sx={{ display: "flex", alignItems: "center" }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    flexDirection: { md: "row", sm: "row", xs: "column" },
+                    fontSize: { md: "inherit", sm: "inherit", xs: "14px" },
+                  }}>
                   <Box
                     mr={1}
                     sx={{
@@ -206,7 +211,13 @@ const ButtonAppearance = () => {
                 handleEditStyle(undefined, e.target.value, "button_option");
               }}
               label={
-                <Box sx={{ display: "flex", alignItems: "center" }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    flexDirection: { md: "row", sm: "row", xs: "column" },
+                    fontSize: { md: "inherit", sm: "inherit", xs: "14px" },
+                  }}>
                   <Box
                     mr={1}
                     sx={{
@@ -231,7 +242,13 @@ const ButtonAppearance = () => {
                 handleEditStyle(undefined, e.target.value, "button_option");
               }}
               label={
-                <Box sx={{ display: "flex", alignItems: "center" }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    flexDirection: { md: "row", sm: "row", xs: "column" },
+                    fontSize: { md: "inherit", sm: "inherit", xs: "14px" },
+                  }}>
                   <Box
                     mr={1}
                     sx={{
@@ -256,7 +273,13 @@ const ButtonAppearance = () => {
                 handleEditStyle(undefined, e.target.value, "button_option");
               }}
               label={
-                <Box sx={{ display: "flex", alignItems: "center" }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    flexDirection: { md: "row", sm: "row", xs: "column" },
+                    fontSize: { md: "inherit", sm: "inherit", xs: "14px" },
+                  }}>
                   <Box
                     mr={1}
                     sx={{
@@ -281,7 +304,13 @@ const ButtonAppearance = () => {
                 handleEditStyle(undefined, e.target.value, "button_option");
               }}
               label={
-                <Box sx={{ display: "flex", alignItems: "center" }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    flexDirection: { md: "row", sm: "row", xs: "column" },
+                    fontSize: { md: "inherit", sm: "inherit", xs: "14px" },
+                  }}>
                   <Box
                     mr={1}
                     sx={{
@@ -307,7 +336,13 @@ const ButtonAppearance = () => {
                 handleEditStyle(undefined, e.target.value, "button_option");
               }}
               label={
-                <Box sx={{ display: "flex", alignItems: "center" }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    flexDirection: { md: "row", sm: "row", xs: "column" },
+                    fontSize: { md: "inherit", sm: "inherit", xs: "14px" },
+                  }}>
                   <Box
                     mr={1}
                     sx={{

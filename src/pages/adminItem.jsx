@@ -2,16 +2,12 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-import { Grid, Box, Tab, Tabs, useMediaQuery } from "@mui/material";
-import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
+import { Grid, useMediaQuery } from "@mui/material";
 import PhoneAppearance from "../components/molecules/Phone-appearance";
-import LayersIcon from "@mui/icons-material/Layers";
-import LaunchIcon from "@mui/icons-material/Launch";
 
 import NavbarTemplate from "../components/organisms/Navbar-template";
 import ContainerTemplate from "../components/atoms/Container-template";
 import ContentAdminItem from "../components/organisms/Content-adminItem";
-import ContentAppearance from "../components/organisms/Content-appearance";
 
 const AdminItem = () => {
   document.title = "LinkHub | Admin Post";
@@ -23,12 +19,6 @@ const AdminItem = () => {
   const [getAuthDataRedux, setGetAuthDataRedux] = React.useState(
     useSelector((state) => state?.auth?.data?.data)
   );
-
-  const [value, setValue] = React.useState("item");
-
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
 
   React.useEffect(() => {
     if (!getAuthDataRedux) {
@@ -43,46 +33,11 @@ const AdminItem = () => {
       <ContainerTemplate
         _setTheme={mode}
         sx={{
-          // display: "flex",
-          // justifyContent: "center",
-          // alignItems: "center",
-          // paddingX: "5vh",
           padding: isXs ? "0" : "0 5vw",
         }}>
-        <Box
-          // p={{ md: "0 10vw", sm: "0 10vw", xs: "0 5vw" }}
-          sx={{ width: "100%" }}>
-          <Tabs
-            value={value}
-            onChange={handleChange}
-            centered
-            indicatorColor="secondary"
-            textColor="inherit">
-            <Tab
-              value="back"
-              label="Back"
-              icon={<ArrowBackIosNewIcon />}
-              iconPosition="start"
-              onClick={() => navigate("/admin")}
-            />
-            <Tab
-              value="item"
-              label="Item"
-              icon={<LayersIcon />}
-              iconPosition="start"
-            />
-            <Tab
-              value="appearance"
-              label="Appearance"
-              icon={<LaunchIcon />}
-              iconPosition="start"
-            />
-          </Tabs>
-        </Box>
         <Grid container spacing={2} sx={{ paddingX: "5vh" }}>
           <Grid item md={8} sm={12} xs={12}>
-            {value === "item" && <ContentAdminItem />}
-            {value === "appearance" && <ContentAppearance />}
+            <ContentAdminItem />
           </Grid>
           <Grid
             item
@@ -97,7 +52,6 @@ const AdminItem = () => {
               // height: "auto",
               display: { md: "block", sm: "none", xs: "none" },
             }}>
-            {/* {!isXs && <PhoneAppearance />} */}
             <PhoneAppearance />
           </Grid>
         </Grid>

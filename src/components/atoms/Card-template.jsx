@@ -10,7 +10,7 @@ const CardTemplate = ({ sx, children, icon, onClick }) => {
         borderRadius: "20px",
         bgcolor: "background.default2",
         display: "flex",
-        flexDirection: isXs ? "column" : "row",
+        flexDirection: { md: "row", sm: "column", xs: "column" },
         px: 3,
         py: 3,
         ...sx,
