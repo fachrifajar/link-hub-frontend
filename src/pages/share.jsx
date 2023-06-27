@@ -1,7 +1,7 @@
 import React from "react";
 import axios from "axios";
 
-import { Box, Avatar, Typography, Skeleton, Link } from "@mui/material";
+import { Box, Avatar, Typography, Link } from "@mui/material";
 import { lighten, darken } from "polished";
 import ButtonTemplate from "../components/atoms/Button-template";
 
