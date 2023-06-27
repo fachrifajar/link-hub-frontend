@@ -30,8 +30,6 @@ const iconsData = [
 ];
 
 const Share = () => {
-  // document.title = "LinkHub | Admin";
-
   const [mode, setMode] = React.useState(
     localStorage.getItem("selectedTheme") || "light"
   );
@@ -40,6 +38,7 @@ const Share = () => {
 
   const [getData, setGetData] = React.useState([]);
   const [getDataUser, setGetDataUser] = React.useState([]);
+  document.title = `LinkHub | @${getDataUser?.username}`;
 
   const [fontColor, setFontColor] = React.useState({
     original: "",

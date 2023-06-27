@@ -7,7 +7,7 @@ import ContainerTemplate from "../components/atoms/Container-template";
 import ContentAdmin from "../components/organisms/Content-admin";
 
 const Admin = () => {
-  document.title = "LinkHub | Admin";
+  document.title = "LinkHub | Admin Post";
   const navigate = useNavigate();
   const [mode, setMode] = React.useState(
     localStorage.getItem("selectedTheme") || "light"

@@ -10,7 +10,7 @@ import ContainerTemplate from "../components/atoms/Container-template";
 import ContentAdminItem from "../components/organisms/Content-adminItem";
 
 const AdminItem = () => {
-  document.title = "LinkHub | Admin Post";
+  document.title = "LinkHub | Admin Item";
   const isXs = useMediaQuery("(max-width: 600px)");
   const navigate = useNavigate();
   const [mode, setMode] = React.useState(

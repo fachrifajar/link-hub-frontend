@@ -37,7 +37,7 @@ const iconsData = [
 ];
 
 const Appearance = () => {
-  document.title = "LinkHub | Appearance";
+  document.title = "LinkHub | Admin Appearance";
   const navigate = useNavigate();
 
   const getPostDataRedux = useSelector(

@@ -370,15 +370,14 @@ const ModalFormIconAppearance = ({
             </>
           )}
         </MyCard>
-
-        <ModalErrorTemplate open={modalLogout} text="Session Expired">
-          <ButtonTemplate
-            title="LOGIN"
-            sx={{ width: "50%" }}
-            onClick={() => navigate("/login")}
-          />
-        </ModalErrorTemplate>
       </MyModal>
+      <ModalErrorTemplate open={modalLogout} text="Session Expired">
+        <ButtonTemplate
+          title="LOGIN"
+          sx={{ width: "50%" }}
+          onClick={() => navigate("/login")}
+        />
+      </ModalErrorTemplate>
     </>
   );
 };
