@@ -21,6 +21,7 @@ import DrawerTemplate from "../atoms/Drawer-template";
 import TocIcon from "@mui/icons-material/Toc";
 import LayersIcon from "@mui/icons-material/Layers";
 import LaunchIcon from "@mui/icons-material/Launch";
+import ShareIcon from "@mui/icons-material/Share";
 
 const MaterialUISwitch = styled(Switch)(({ theme }) => ({
   width: 62,
@@ -80,7 +81,7 @@ const NavbarTemplate = ({ _setTheme, getTheme, getAuthDataRedux, sx }) => {
   const getPostDataRedux = useSelector(
     (state) => state?.post?.data?.data?.item
   );
-
+    
   const [authDataRedux, setAuthDataRedux] = React.useState(
     useSelector((state) => state?.auth?.data?.data)
   );
@@ -109,61 +110,171 @@ const NavbarTemplate = ({ _setTheme, getTheme, getAuthDataRedux, sx }) => {
     <>
       <ThemeProvider theme={setTheme}>
         <CssBaseline />
-        <Stack
-          direction="row"
-          alignItems="center"
-          justifyContent="space-between"
-          m={!isXs && 2}
-          sx={{
-            bgcolor: "background.default2",
-            padding: 1.5,
-            marginTop: !isXs && "10px",
-            borderRadius: !isXs && "100px",
-            ...sx,
-          }}>
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              flexDirection: "row",
-              "& img": {
-                width: "20px",
-                height: "20px",
-              },
-            }}>
-            <Typography
-              variant="h6"
-              noWrap
-              component="div"
+        {location.pathname.split("/")[1]?.length < 12 && (
+          <>
+            <Stack
+              direction="row"
+              alignItems="center"
+              justifyContent="space-between"
+              m={!isXs && 2}
               sx={{
-                fontFamily: "monospace",
-                fontWeight: 700,
-                letterSpacing: ".3rem",
-                textDecoration: "none",
-                color: "text.primary",
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
-                marginLeft: 1,
-                "& span": {
-                  color: "white",
-                  fontFamily: "monospace",
-                  borderRadius: "5px",
-                  paddingLeft: "5px",
-                  bgcolor: "primary.main",
-                },
+                bgcolor: "background.default2",
+                padding: 1.5,
+                marginTop: !isXs && "10px",
+                borderRadius: !isXs && "100px",
+                ...sx,
               }}>
-              Link
-              <span>Hub</span>
-            </Typography>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  flexDirection: "row",
+                  "& img": {
+                    width: "20px",
+                    height: "20px",
+                  },
+                }}>
+                <Typography
+                  variant="h6"
+                  noWrap
+                  component="div"
+                  sx={{
+                    fontFamily: "monospace",
+                    fontWeight: 700,
+                    letterSpacing: ".3rem",
+                    textDecoration: "none",
+                    color: "text.primary",
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    marginLeft: 1,
+                    "& span": {
+                      color: "white",
+                      fontFamily: "monospace",
+                      borderRadius: "5px",
+                      paddingLeft: "5px",
+                      bgcolor: "primary.main",
+                    },
+                  }}>
+                  Link
+                  <span>Hub</span>
+                </Typography>
 
-            {!isXs && checkPath !== undefined && (
+                {!isXs && checkPath !== undefined && (
+                  <Stack
+                    direction="row"
+                    alignItems="center"
+                    justifyContent="space-between"
+                    ml={2}
+                    spacing={2}>
+                    <CardActionArea
+                      onClick={() => navigate("/admin")}
+                      sx={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        flexDirection: "row",
+                        color: checkPath === "admin" ? "inherit" : "gray",
+                      }}>
+                      <TocIcon sx={{ mr: 1 }} />
+                      <Typography variant="body1">Post</Typography>
+                    </CardActionArea>
+
+                    <CardActionArea
+                      onClick={() =>
+                        navigate(`/admin/post/${getPostDataRedux?.id}`)
+                      }
+                      sx={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        flexDirection: "row",
+                        color: checkPath === "post" ? "inherit" : "gray",
+                      }}>
+                      <LayersIcon sx={{ mr: 1 }} />
+                      <Typography variant="body1">Item</Typography>
+                    </CardActionArea>
+
+                    <CardActionArea
+                      onClick={() =>
+                        navigate(`/admin/appearance/${getPostDataRedux?.id}`)
+                      }
+                      sx={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        flexDirection: "row",
+                        color: checkPath === "appearance" ? "inherit" : "gray",
+                      }}>
+                      <LaunchIcon sx={{ mr: 1 }} />
+                      <Typography variant="body1">Appearance</Typography>
+                    </CardActionArea>
+
+                    <CardActionArea
+                      onClick={() =>
+                        navigate(
+                          `/${authDataRedux?.username}-${getPostDataRedux?.id}`
+                        )
+                      }
+                      sx={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        flexDirection: "row",
+                        color: checkPath === undefined ? "inherit" : "gray",
+                      }}>
+                      <ShareIcon sx={{ mr: 1 }} />
+                      <Typography variant="body1">Share</Typography>
+                    </CardActionArea>
+                  </Stack>
+                )}
+              </Box>
+
+              {!isXs && (
+                <Stack
+                  direction="row"
+                  spacing={2}
+                  alignItems="center"
+                  sx={{ alignItems: "center" }}>
+                  {authDataRedux && (
+                    <ButtonTemplate
+                      color="secondary"
+                      variant="outlined"
+                      title="Log Out"
+                      onClick={handleLogout}
+                      sx={{
+                        marginTop: 0,
+                        borderRadius: "50px",
+                      }}
+                    />
+                  )}
+                  <MaterialUISwitch onChange={handleSwitchChange} />
+                </Stack>
+              )}
+
+              {isXs && (
+                <DrawerTemplate
+                  _getAuthDataRedux={authDataRedux}
+                  // onClick_profile={() => navigate("/admin")}
+                  onClick_logout={handleLogout}>
+                  <MaterialUISwitch onChange={handleSwitchChange} />
+                </DrawerTemplate>
+              )}
+            </Stack>
+
+            {isXs && checkPath !== undefined && (
               <Stack
                 direction="row"
                 alignItems="center"
-                justifyContent="space-between"
-                ml={2}
-                spacing={2}>
+                justifyContent="space-around"
+                m={2}
+                spacing={1}
+                sx={{
+                  bgcolor: "background.default2",
+                  padding: 1.5,
+                  marginTop: "10px",
+                  borderRadius: "100px",
+                }}>
                 <CardActionArea
                   onClick={() => navigate("/admin")}
                   sx={{
@@ -206,96 +317,26 @@ const NavbarTemplate = ({ _setTheme, getTheme, getAuthDataRedux, sx }) => {
                   <LaunchIcon sx={{ mr: 1 }} />
                   <Typography variant="body1">Appearance</Typography>
                 </CardActionArea>
+
+                <CardActionArea
+                  onClick={() =>
+                    navigate(
+                      `/${authDataRedux?.username}-${getPostDataRedux?.id}`
+                    )
+                  }
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    flexDirection: "row",
+                    color: checkPath === undefined ? "inherit" : "gray",
+                  }}>
+                  <ShareIcon sx={{ mr: 1 }} />
+                  <Typography variant="body1">Share</Typography>
+                </CardActionArea>
               </Stack>
             )}
-          </Box>
-
-          {!isXs && (
-            <Stack
-              direction="row"
-              spacing={2}
-              alignItems="center"
-              sx={{ alignItems: "center" }}>
-              {authDataRedux && (
-                <ButtonTemplate
-                  color="secondary"
-                  variant="outlined"
-                  title="Log Out"
-                  onClick={handleLogout}
-                  sx={{
-                    marginTop: 0,
-                    borderRadius: "50px",
-                  }}
-                />
-              )}
-              <MaterialUISwitch onChange={handleSwitchChange} />
-            </Stack>
-          )}
-
-          {isXs && (
-            <DrawerTemplate
-              _getAuthDataRedux={authDataRedux}
-              // onClick_profile={() => navigate("/admin")}
-              onClick_logout={handleLogout}>
-              <MaterialUISwitch onChange={handleSwitchChange} />
-            </DrawerTemplate>
-          )}
-        </Stack>
-
-        {isXs && checkPath !== undefined && (
-          <Stack
-            direction="row"
-            alignItems="center"
-            justifyContent="space-around"
-            m={2}
-            spacing={1}
-            sx={{
-              bgcolor: "background.default2",
-              padding: 1.5,
-              marginTop: "10px",
-              borderRadius: "100px",
-            }}>
-            <CardActionArea
-              onClick={() => navigate("/admin")}
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                flexDirection: "row",
-                color: checkPath === "admin" ? "inherit" : "gray",
-              }}>
-              <TocIcon sx={{ mr: 1 }} />
-              <Typography variant="body1">Post</Typography>
-            </CardActionArea>
-
-            <CardActionArea
-              onClick={() => navigate(`/admin/post/${getPostDataRedux?.id}`)}
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                flexDirection: "row",
-                color: checkPath === "post" ? "inherit" : "gray",
-              }}>
-              <LayersIcon sx={{ mr: 1 }} />
-              <Typography variant="body1">Item</Typography>
-            </CardActionArea>
-
-            <CardActionArea
-              onClick={() =>
-                navigate(`/admin/appearance/${getPostDataRedux?.id}`)
-              }
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                flexDirection: "row",
-                color: checkPath === "appearance" ? "inherit" : "gray",
-              }}>
-              <LaunchIcon sx={{ mr: 1 }} />
-              <Typography variant="body1">Appearance</Typography>
-            </CardActionArea>
-          </Stack>
+          </>
         )}
       </ThemeProvider>
     </>

@@ -10,7 +10,7 @@ const MyModal = styled(Modal)({
   marginBottom: "30vh",
 });
 
-const MyCard = styled(Card)(({ theme }) => ({
+const MyCard = styled(Card)(({ theme, sx }) => ({
   textAlign: "center",
   borderRadius: "20px",
   padding: "30px 50px",
@@ -20,13 +20,14 @@ const MyCard = styled(Card)(({ theme }) => ({
   //   width: "40vw",
   // },
   width: "500px",
+  ...sx,
 }));
 
 const ModalErrorTemplate = ({ open, onClose, text, children, sx }) => {
   return (
     <>
       <MyModal open={open} onClose={onClose}>
-        <MyCard>
+        <MyCard sx={sx}>
           <ReportProblemIcon color="error" sx={{ fontSize: "50px" }} />
           <Typography
             variant="h4"

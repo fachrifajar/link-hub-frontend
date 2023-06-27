@@ -16,6 +16,7 @@ import Google from "./pages/auth/google";
 import Admin from "./pages/admin";
 import AdminItem from "./pages/adminItem";
 import Appearance from "./pages/appearance";
+import Share from "./pages/share";
 
 const router = createBrowserRouter([
   // {
@@ -62,6 +63,10 @@ const router = createBrowserRouter([
   {
     path: "/admin/appearance/:id",
     element: <Appearance />,
+  },
+  {
+    path: "/:id",
+    element: <Share />,
   },
 ]);
 

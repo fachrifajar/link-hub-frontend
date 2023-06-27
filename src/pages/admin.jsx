@@ -15,11 +15,6 @@ const Admin = () => {
   const [getAuthDataRedux, setGetAuthDataRedux] = React.useState(
     useSelector((state) => state?.auth?.data?.data)
   );
-  const [value, setValue] = React.useState("post");
-
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
 
   React.useEffect(() => {
     if (!getAuthDataRedux) {

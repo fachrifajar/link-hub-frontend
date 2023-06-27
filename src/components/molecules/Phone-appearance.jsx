@@ -42,7 +42,7 @@ const PhoneAppearance = () => {
   const darkenFontColor = darken(0.1, fontColor);
 
   const hexColor = getPostDataRedux?.bg_color;
-  const lightenedColor = lighten(0.3, hexColor);
+  const lightenedColor = lighten(0.4, hexColor);
   const gradientStyle = {
     backgroundImage: `linear-gradient(${bg_dir}, ${hexColor}, ${lightenedColor})`,
   };

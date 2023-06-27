@@ -6,6 +6,7 @@ import { useSelector, useDispatch } from "react-redux";
 import * as authReducer from "../../store/reducer/auth";
 
 import ButtonTemplate from "../atoms/Button-template";
+import ModalErrorTemplate from "./Modal-error-template";
 
 const MyModal = styled(Modal)({
   display: "flex",
@@ -28,6 +29,10 @@ const ModalProfileAppearance = ({ open, onClose, success }) => {
   const [isLoading, setIsLoading] = React.useState(false);
   const [selectedImage, setSelectedImage] = React.useState(null);
   const [previewImage, setPreviewImage] = React.useState(null);
+  const [isModalErrOpen, setIsModalErrOpen] = React.useState({
+    isErr: false,
+    errMsg: "",
+  });
 
   const getAuthDataRedux = useSelector((state) => state?.auth?.data?.data);
 
@@ -112,11 +117,34 @@ const ModalProfileAppearance = ({ open, onClose, success }) => {
       console.log("error-handleUploadData", error);
 
       const errMsg = error?.response?.data?.message;
-
+      console.log(errMsg);
       if (errMsg === "Token Expired") {
         handleRefToken("post");
       } else {
-        setIsLoading(false);
+        if (error?.response?.status === 413) {
+          setIsLoading(false);
+          setIsModalErrOpen((prevValue) => ({
+            ...prevValue,
+            isErr: true,
+            errMsg:
+              "Upload failed. IMG_5821.JPG is over the file size limit of 2 MB.",
+          }));
+        } else if (error?.response?.status === 422) {
+          setIsLoading(false);
+          setIsModalErrOpen((prevValue) => ({
+            ...prevValue,
+            isErr: true,
+            errMsg:
+              "Upload failed. Only .png, .jpg, .jpeg, .PNG, .JPG, .JPEG files allowed.",
+          }));
+        } else if (error?.response?.status === 500) {
+          setIsLoading(false);
+          setIsModalErrOpen((prevValue) => ({
+            ...prevValue,
+            isErr: true,
+            errMsg: "Internal Server Error",
+          }));
+        }
       }
     }
   };
@@ -247,6 +275,17 @@ const ModalProfileAppearance = ({ open, onClose, success }) => {
           </Box>
         </MyCard>
       </MyModal>
+
+      <ModalErrorTemplate
+        open={isModalErrOpen?.isErr}
+        onClose={() =>
+          setIsModalErrOpen((prevValue) => ({
+            ...prevValue,
+            isErr: false,
+          }))
+        }
+        text={isModalErrOpen?.errMsg}
+      />
     </>
   );
 };

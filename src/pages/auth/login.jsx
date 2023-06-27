@@ -212,7 +212,7 @@ const Login = () => {
           data: response?.data?.data,
         })
       );
-
+      console.log(response?.data?.data);
       const validateUsername = response?.data?.data?.username.split("-")[0];
 
       if (validateUsername == "firebase") {

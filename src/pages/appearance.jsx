@@ -1,5 +1,7 @@
 import React from "react";
 import { Paper, Typography, Box, CardActionArea, Grid } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+
 import EditIcon from "@mui/icons-material/Edit";
 import EmailIcon from "@mui/icons-material/Email";
 import FacebookIcon from "@mui/icons-material/Facebook";
@@ -36,10 +38,12 @@ const iconsData = [
 
 const Appearance = () => {
   document.title = "LinkHub | Appearance";
+  const navigate = useNavigate();
+
   const getPostDataRedux = useSelector(
     (state) => state?.post?.data?.data?.item
   );
-
+  const getAuthDataRedux = useSelector((state) => state?.auth?.data?.data);
   const [mode, setMode] = React.useState(
     localStorage.getItem("selectedTheme") || "light"
   );
@@ -53,6 +57,12 @@ const Appearance = () => {
   const [title, setTitle] = React.useState("");
   const [getId, setGetId] = React.useState("");
   const [getUrl, setGetUrl] = React.useState("");
+
+  React.useEffect(() => {
+    if (!getAuthDataRedux) {
+      navigate("/login");
+    }
+  }, []);
 
   return (
     <>
