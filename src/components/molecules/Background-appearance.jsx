@@ -11,20 +11,25 @@ import {
   FormControlLabel,
 } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import * as postReducer from "../../store/reducer/post";
 import * as authReducer from "../../store/reducer/auth";
 import { debounce } from "lodash";
 
 import TextFieldTemplate from "../atoms/Textfield-template";
+import ModalErrorTemplate from "./Modal-error-template";
+import ButtonTemplate from "../atoms/Button-template";
 
 const BackgroundAppearance = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const getAuthDataRedux = useSelector((state) => state?.auth?.data?.data);
   const getPostDataRedux = useSelector(
     (state) => state?.post?.data?.data?.item
   );
 
+  const [modalLogout, setModalLogout] = React.useState(false);
   const [getBg, setGetBg] = React.useState("");
   const [getBg_color, setGetBg_color] = React.useState("");
   const [getBg_direction, setGetBg_direction] = React.useState("");
@@ -127,7 +132,8 @@ const BackgroundAppearance = () => {
       const errMsg = error?.response?.data?.message;
 
       if (errMsg === "Token Expired") {
-        console.log("HARUS LOGOUT");
+        dispatch(authReducer.deleteAuth());
+        setModalLogout(true);
       }
     }
   };
@@ -334,6 +340,14 @@ const BackgroundAppearance = () => {
             justifyContent: "center",
           }}
         />
+
+        <ModalErrorTemplate open={modalLogout} text="Session Expired">
+          <ButtonTemplate
+            title="LOGIN"
+            sx={{ width: "50%" }}
+            onClick={() => navigate("/login")}
+          />
+        </ModalErrorTemplate>
       </Paper>
     </>
   );

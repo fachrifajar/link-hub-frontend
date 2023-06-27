@@ -54,6 +54,8 @@ const ContentAdminItem = () => {
     isErr: false,
   });
 
+  const [modalLogout, setModalLogout] = useState(false);
+
   const handleDragEnd = useCallback(
     (result) => {
       if (!result.destination) return;
@@ -399,7 +401,8 @@ const ContentAdminItem = () => {
       const errMsg = error?.response?.data?.message;
 
       if (errMsg === "Token Expired") {
-        console.log("HARUS LOGOUT");
+        dispatch(authReducer.deleteAuth());
+        setModalLogout(true);
       }
     }
   };
@@ -630,6 +633,13 @@ const ContentAdminItem = () => {
                 }}
                 text={modalErr?.errMsg}
               />
+              <ModalErrorTemplate open={modalLogout} text="Session Expired">
+                <ButtonTemplate
+                  title="LOGIN"
+                  sx={{ width: "50%" }}
+                  onClick={() => navigate("/login")}
+                />
+              </ModalErrorTemplate>
             </Box>
           )}
         </Droppable>

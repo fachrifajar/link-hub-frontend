@@ -55,6 +55,8 @@ const ContentAdmin = () => {
     isErr: false,
   });
 
+  const [modalLogout, setModalLogout] = React.useState(false);
+
   const handleEditPost = async (id, newAccessToken) => {
     try {
       let accessToken;
@@ -270,7 +272,8 @@ const ContentAdmin = () => {
       const errMsg = error?.response?.data?.message;
 
       if (errMsg == "Token Expired") {
-        console.log("HARUS LOGOUT");
+        dispatch(authReducer.deleteAuth());
+        setModalLogout(true);
       }
     }
   };
@@ -416,7 +419,7 @@ const ContentAdmin = () => {
                       }}
                       sx={{
                         marginTop: 0,
-                        width: {md: "100%", sm: "40%", xs: "40%"},
+                        width: { md: "100%", sm: "40%", xs: "40%" },
                       }}
                     />
                     <ButtonTemplate
@@ -434,7 +437,7 @@ const ContentAdmin = () => {
                       startIcon={<DeleteIcon />}
                       sx={{
                         marginTop: 0,
-                        width: {md: "100%", sm: "40%", xs: "40%"},
+                        width: { md: "100%", sm: "40%", xs: "40%" },
                       }}
                     />
                   </Stack>
@@ -458,6 +461,14 @@ const ContentAdmin = () => {
           }}
           text={modalErr?.errMsg}
         />
+
+        <ModalErrorTemplate open={modalLogout} text="Session Expired">
+          <ButtonTemplate
+            title="LOGIN"
+            sx={{ width: "50%" }}
+            onClick={() => navigate("/login")}
+          />
+        </ModalErrorTemplate>
       </Box>
     </>
   );

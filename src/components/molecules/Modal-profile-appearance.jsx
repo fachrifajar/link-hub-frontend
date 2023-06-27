@@ -4,6 +4,7 @@ import { useDropzone } from "react-dropzone";
 import { Modal, Card, styled, Box, Typography } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import * as authReducer from "../../store/reducer/auth";
+import { useNavigate } from "react-router-dom";
 
 import ButtonTemplate from "../atoms/Button-template";
 import ModalErrorTemplate from "./Modal-error-template";
@@ -24,6 +25,7 @@ const MyCard = styled(Card)({
 
 const ModalProfileAppearance = ({ open, onClose, success }) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const [isDisabled, setIsDisabled] = React.useState(true);
   const [isLoading, setIsLoading] = React.useState(false);
@@ -33,6 +35,7 @@ const ModalProfileAppearance = ({ open, onClose, success }) => {
     isErr: false,
     errMsg: "",
   });
+  const [modalLogout, setModalLogout] = React.useState(false);
 
   const getAuthDataRedux = useSelector((state) => state?.auth?.data?.data);
 
@@ -175,7 +178,8 @@ const ModalProfileAppearance = ({ open, onClose, success }) => {
       const errMsg = error?.response?.data?.message;
 
       if (errMsg === "Token Expired") {
-        console.log("HARUS LOGOUT");
+        dispatch(authReducer.deleteAuth());
+        setModalLogout(true);
       }
     }
   };
@@ -286,6 +290,14 @@ const ModalProfileAppearance = ({ open, onClose, success }) => {
         }
         text={isModalErrOpen?.errMsg}
       />
+
+      <ModalErrorTemplate open={modalLogout} text="Session Expired">
+        <ButtonTemplate
+          title="LOGIN"
+          sx={{ width: "50%" }}
+          onClick={() => navigate("/login")}
+        />
+      </ModalErrorTemplate>
     </>
   );
 };

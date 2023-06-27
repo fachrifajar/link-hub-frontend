@@ -3,10 +3,12 @@ import { Modal, Card, styled, Box, Typography } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import * as authReducer from "../../store/reducer/auth";
 import * as postReducer from "../../store/reducer/post";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 import TextFieldTemplate from "../atoms/Textfield-template";
 import ButtonTemplate from "../atoms/Button-template";
-import axios from "axios";
+import ModalErrorTemplate from "./Modal-error-template";
 
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import CloseIcon from "@mui/icons-material/Close";
@@ -39,6 +41,7 @@ const ModalFormIconAppearance = ({
   url,
 }) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const getAuthDataRedux = useSelector((state) => state?.auth?.data?.data);
 
@@ -48,6 +51,7 @@ const ModalFormIconAppearance = ({
     isDisabled: true,
   });
   const [isLoadingDelete, setIsLoadingDelete] = React.useState(false);
+  const [modalLogout, setModalLogout] = React.useState(false);
 
   const handleChangeValue = (event) => {
     const newValue = event.target.value;
@@ -277,7 +281,8 @@ const ModalFormIconAppearance = ({
       const errMsg = error?.response?.data?.message;
 
       if (errMsg === "Token Expired") {
-        console.log("HARUS LOGOUT");
+        dispatch(authReducer.deleteAuth());
+        setModalLogout(true);
       }
     }
   };
@@ -365,6 +370,14 @@ const ModalFormIconAppearance = ({
             </>
           )}
         </MyCard>
+
+        <ModalErrorTemplate open={modalLogout} text="Session Expired">
+          <ButtonTemplate
+            title="LOGIN"
+            sx={{ width: "50%" }}
+            onClick={() => navigate("/login")}
+          />
+        </ModalErrorTemplate>
       </MyModal>
     </>
   );

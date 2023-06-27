@@ -10,6 +10,7 @@ import {
   Switch,
 } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import * as authReducer from "../../store/reducer/auth";
 import * as postReducer from "../../store/reducer/post";
 import { darken } from "polished";
@@ -22,6 +23,7 @@ import ModalErrorTemplate from "./Modal-error-template";
 
 const ProfileAppearance = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const getAuthDataRedux = useSelector((state) => state?.auth?.data?.data);
   const getPostDataRedux = useSelector(
@@ -38,6 +40,7 @@ const ProfileAppearance = () => {
     isErr: false,
     errMsg: "",
   });
+  const [modalLogout, setModalLogout] = React.useState(false);
 
   //edit profile
   const [editTitle, setEditTitle] = React.useState("");
@@ -313,7 +316,8 @@ const ProfileAppearance = () => {
       const errMsg = error?.response?.data?.message;
 
       if (errMsg === "Token Expired") {
-        console.log("HARUS LOGOUT");
+        dispatch(authReducer.deleteAuth());
+        setModalLogout(true);
       }
     }
   };
@@ -468,6 +472,14 @@ const ProfileAppearance = () => {
         }}
         text={isModalErrOpen?.errMsg}
       />
+
+      <ModalErrorTemplate open={modalLogout} text="Session Expired">
+        <ButtonTemplate
+          title="LOGIN"
+          sx={{ width: "50%" }}
+          onClick={() => navigate("/login")}
+        />
+      </ModalErrorTemplate>
     </>
   );
 };

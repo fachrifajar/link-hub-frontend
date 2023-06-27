@@ -10,6 +10,7 @@ import ContainerTemplate from "../../components/atoms/Container-template";
 import TextFieldTemplate from "../../components/atoms/Textfield-template";
 import ButtonTemplate from "../../components/atoms/Button-template";
 import ModalSuccessTemplate from "../../components/molecules/Modal-success-template";
+import ModalErrorTemplate from "../../components/molecules/Modal-error-template";
 
 import ArrowRightAltIcon from "@mui/icons-material/ArrowRightAlt";
 
@@ -23,6 +24,7 @@ const Google = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  const [modalLogout, setModalLogout] = React.useState(false);
   const [username, setUsername] = React.useState({
     isErr: false,
     errMsg: "",
@@ -144,7 +146,8 @@ const Google = () => {
       const errMsg = error?.response?.data?.message;
 
       if (errMsg == "Token Expired") {
-        console.log("HARUS LOGOUT");
+        dispatch(authReducer.deleteAuth());
+        setModalLogout(true);
       }
     }
   };
@@ -277,6 +280,14 @@ const Google = () => {
             }}
           />
         </ModalSuccessTemplate>
+
+        <ModalErrorTemplate open={modalLogout} text="Session Expired">
+          <ButtonTemplate
+            title="LOGIN"
+            sx={{ width: "50%" }}
+            onClick={() => navigate("/login")}
+          />
+        </ModalErrorTemplate>
       </ContainerTemplate>
     </>
   );

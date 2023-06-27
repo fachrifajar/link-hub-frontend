@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import * as postReducer from "../../store/reducer/post";
 import * as authReducer from "../../store/reducer/auth";
 import { debounce } from "lodash";
+import { useNavigate } from "react-router-dom";
 import {
   Typography,
   Paper,
@@ -16,16 +17,19 @@ import {
 } from "@mui/material";
 
 import TextFieldTemplate from "../atoms/Textfield-template";
+import ModalErrorTemplate from "./Modal-error-template";
+import ButtonTemplate from "../atoms/Button-template";
 
 const ButtonAppearance = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const getAuthDataRedux = useSelector((state) => state?.auth?.data?.data);
   const getPostDataRedux = useSelector(
     (state) => state?.post?.data?.data?.item
   );
-  console.log(getPostDataRedux);
 
+  const [modalLogout, setModalLogout] = React.useState(false);
   const [getButton_color, setGetButton_color] = React.useState(
     getPostDataRedux?.button_color
   );
@@ -99,7 +103,6 @@ const ButtonAppearance = () => {
         }
       );
 
-
       dispatch(
         postReducer.setPost({
           data: {
@@ -143,7 +146,8 @@ const ButtonAppearance = () => {
       const errMsg = error?.response?.data?.message;
 
       if (errMsg === "Token Expired") {
-        console.log("HARUS LOGOUT");
+        dispatch(authReducer.deleteAuth());
+        setModalLogout(true);
       }
     }
   };
@@ -469,6 +473,14 @@ const ButtonAppearance = () => {
             justifyContent: "center",
           }}
         />
+
+        <ModalErrorTemplate open={modalLogout} text="Session Expired">
+          <ButtonTemplate
+            title="LOGIN"
+            sx={{ width: "50%" }}
+            onClick={() => navigate("/login")}
+          />
+        </ModalErrorTemplate>
       </Paper>
     </>
   );
