@@ -200,7 +200,13 @@ const Share = () => {
                   target="_none"
                   href={item?.url}
                   key={key}
-                  style={{ textDecoration: "none" }}>
+                  style={{
+                    textDecoration: "none",
+                    width: "100%",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}>
                   <ButtonTemplate
                     variant={buttonOption === "fill" ? "contained" : "outlined"}
                     fullWidth={true}
@@ -218,7 +224,7 @@ const Share = () => {
                       marginTop: "0px",
                       mb: { md: "1%", sm: "1%", xs: "3%" },
                       fontSize: "12px",
-                      width: { md: "500px", sm: "500px", xs: "80%" },
+                      width: { md: "500px", sm: "500px", xs: "100%" },
                       height: "7vh",
                       fontSize: "16px",
                     }}
