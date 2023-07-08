@@ -5,7 +5,7 @@ import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { persistStore } from "redux-persist";
 import store from "./store/index";
-import ReactGA from 'react-ga';
+import ReactGA from "react-ga";
 
 // const App = lazy(() => import("./App.jsx"));
 // const Register = lazy(() => import("./pages/auth/register.jsx"));
@@ -73,7 +73,7 @@ const router = createBrowserRouter([
 
 const persistor = persistStore(store);
 
-ReactGA.initialize('G-6HCT1DCS9E');
+ReactGA.initialize("G-6HCT1DCS9E");
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   // <React.StrictMode>

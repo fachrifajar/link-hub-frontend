@@ -243,7 +243,8 @@ const ContentAdmin = () => {
   const handleRefToken = async (fetchType, init) => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_BASE_URL}/auth/refresh/${getAuthDataRedux?.id}`
+        // `${import.meta.env.VITE_BASE_URL}/auth/refresh/${getAuthDataRedux?.id}`
+        `${import.meta.env.VITE_BASE_URL}/auth/refresh/`
       );
       const newAccessToken = response?.data?.data?.getRefreshToken;
 
