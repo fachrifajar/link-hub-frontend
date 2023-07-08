@@ -244,7 +244,10 @@ const ContentAdmin = () => {
     try {
       const response = await axios.get(
         // `${import.meta.env.VITE_BASE_URL}/auth/refresh/${getAuthDataRedux?.id}`
-        `${import.meta.env.VITE_BASE_URL}/auth/refresh`
+        `${import.meta.env.VITE_BASE_URL}/auth/refresh`,
+        {
+          withCredentials: true,
+        }
       );
       const newAccessToken = response?.data?.data?.getRefreshToken;
 
