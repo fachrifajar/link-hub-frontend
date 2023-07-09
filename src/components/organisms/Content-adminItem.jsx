@@ -366,7 +366,10 @@ const ContentAdminItem = () => {
     try {
       if (init) setIsInitialRender(true);
       const response = await axios.get(
-        `${import.meta.env.VITE_BASE_URL}/auth/refresh/${getAuthDataRedux?.id}`
+        `${import.meta.env.VITE_BASE_URL}/auth/refresh`,
+        {
+          withCredentials: true,
+        }
       );
       const newAccessToken = response?.data?.data?.getRefreshToken;
 
@@ -529,7 +532,7 @@ const ContentAdminItem = () => {
                                     sx: {
                                       color: "text.primary",
                                     },
-                                    maxLength: 20,
+                                    // maxLength: 20,
                                   },
                                 }}
                                 sx={{
