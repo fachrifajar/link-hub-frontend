@@ -108,7 +108,7 @@ const Share = () => {
 
     handleGetPost(id);
   }, []);
-  console.log(getData?.Item)
+
   return (
     <>
       <NavbarTemplate _setTheme={mode} getTheme={(e) => setMode(e)} />
